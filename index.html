@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="49er Theory">
+<meta name="theme-color" content="#0A1F4C">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="stylesheet" href="app.css">
+<title>Contents</title>
+<script>
+/* set text size and background before first paint so there is no flash */
+try {
+  var p = JSON.parse(localStorage.getItem('k49.prefs.v1') || '{}');
+  var s = ['17px','20px','23px','26px'][p.size == null ? 1 : p.size];
+  document.documentElement.style.setProperty('--fs', s);
+  var sysDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  var th = p.theme || (sysDark ? 'dark' : 'light');
+  document.addEventListener('DOMContentLoaded', function () {
+    document.body.classList.add('t-' + th);
+  });
+} catch (e) {}
+</script>
+<style>
+/* ------------------------------------------------------------------ cover */
+#p-cover { padding: 0; max-width: none; overflow: hidden; }
+/* the cover is a full-bleed page, so it must escape the reading column */
+body[data-page="cover"] main.wrap { max-width: none; padding: 0; margin: 0; }
+#p-cover .cvwrap { width: 100vw; margin-left: calc(50% - 50vw); }
+.cvwrap {
+  height: 100vh; height: 100dvh; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  background: #050E28;
+}
+.cvpage {
+  /* one unit is a 198th of the cover's width, as a millimetre is in print */
+  --u: calc(min(100vw, 74.717vh) / 198);
+  --u2: calc(min(100dvw, 74.717dvh) / 198);
+  position: relative; overflow: hidden;
+  width: calc(198 * var(--u)); height: calc(265 * var(--u));
+  background:
+    radial-gradient(112% 78% at 24% 8%, #1E4794 0%, rgba(30,71,148,0) 56%),
+    linear-gradient(168deg, #12326C 0%, #0A1F4C 50%, #050E28 100%);
+  color: #F2F6FB;
+  font-family: "Liberation Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+.cvpage .cvweave, .cvpage .cvgrain, .cvpage .cvvignette, .cvpage .cvspine { position: absolute; inset: 0; }
+.cvpage .cvweave {
+  background-image:
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.030) 0 calc(0.35 * var(--u)), rgba(0,0,0,0) calc(0.35 * var(--u)) calc(0.9 * var(--u))),
+    repeating-linear-gradient(0deg,  rgba(255,255,255,0.024) 0 calc(0.35 * var(--u)), rgba(0,0,0,0) calc(0.35 * var(--u)) calc(0.9 * var(--u))),
+    repeating-linear-gradient(45deg, rgba(0,0,0,0.055) 0 calc(0.5 * var(--u)), rgba(0,0,0,0) calc(0.5 * var(--u)) calc(1.6 * var(--u)));
+}
+.cvpage .cvgrain {
+  inset: calc(-4 * var(--u));
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMjAiIGhlaWdodD0iMzIwIj48ZmlsdGVyIGlkPSJuIiB4PSIwIiB5PSIwIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC44NSIgbnVtT2N0YXZlcz0iNCIgc3RpdGNoVGlsZXM9InN0aXRjaCIvPjxmZUNvbG9yTWF0cml4IHR5cGU9InNhdHVyYXRlIiB2YWx1ZXM9IjAiLz48L2ZpbHRlcj48cmVjdCB3aWR0aD0iMzIwIiBoZWlnaHQ9IjMyMCIgZmlsdGVyPSJ1cmwoI24pIi8+PC9zdmc+");
+  background-size: calc(34 * var(--u)) calc(34 * var(--u));
+  opacity: 0.15;
+}
+.cvpage .cvvignette { background: radial-gradient(120% 88% at 50% 42%, rgba(0,0,0,0) 45%, rgba(0,0,0,0.44) 100%); }
+.cvpage .cvspine {
+  right: auto; width: calc(16 * var(--u));
+  background: linear-gradient(90deg, rgba(0,0,0,0.42) 0%, rgba(0,0,0,0.14) 55%, rgba(0,0,0,0) 100%);
+}
+.cvpage .cvplan {
+  position: absolute; right: calc(16 * var(--u)); top: calc(14 * var(--u));
+  width: calc(166 * var(--u)); height: calc(215 * var(--u));
+  transform: scaleX(-1);
+}
+.cvpage .cvplan .ink  { stroke: #FFFFFF; fill: none; opacity: 0.175; }
+.cvpage .cvplan .thin { stroke: #FFFFFF; fill: none; opacity: 0.125; }
+.cvpage .cvplan .kite { stroke: #FFFFFF; fill: none; opacity: 0.105; }
+.cvpage .cvkeyline {
+  position: absolute;
+  left: calc(15 * var(--u)); right: calc(15 * var(--u));
+  top: calc(15 * var(--u)); bottom: calc(15 * var(--u));
+  border: calc(0.35 * var(--u)) solid rgba(201,166,107,0.52);
+}
+.cvpage .cvkeyline:after {
+  content: ""; position: absolute;
+  left: calc(2.2 * var(--u)); right: calc(2.2 * var(--u));
+  top: calc(2.2 * var(--u)); bottom: calc(2.2 * var(--u));
+  border: calc(0.15 * var(--u)) solid rgba(242,246,251,0.17);
+}
+.cvpage .cvplate {
+  position: absolute; left: calc(26 * var(--u)); right: calc(26 * var(--u));
+  top: calc(50 * var(--u));
+}
+.cvpage .cveyebrow {
+  font-size: calc(8.6 * 0.3528 * var(--u)); letter-spacing: 0.30em;
+  text-transform: uppercase; color: #C9A66B; margin: 0 0 calc(13 * var(--u)) 0;
+}
+.cvpage h1 {
+  font-family: Charter, "Bitstream Charter", "Iowan Old Style", Georgia, serif;
+  font-weight: 700; font-size: calc(40 * 0.3528 * var(--u)); line-height: 1.08;
+  letter-spacing: -0.012em; margin: 0; color: #FFFFFF;
+  text-shadow: 0 calc(0.3 * var(--u)) calc(0.9 * var(--u)) rgba(0,0,0,0.40);
+  border: 0; padding: 0;
+}
+.cvpage h1 .cvlight {
+  font-weight: 400; font-style: italic; color: #DEE8F4; display: block;
+  font-size: calc(33 * 0.3528 * var(--u));
+}
+.cvpage .cvrule {
+  height: calc(0.7 * var(--u)); width: calc(42 * var(--u));
+  background: #C9A66B; margin: calc(11 * var(--u)) 0 calc(9 * var(--u)) 0;
+}
+.cvpage .cvsub {
+  font-size: calc(11.5 * 0.3528 * var(--u)); line-height: 1.55; color: #C6D5EA;
+  margin: 0; max-width: calc(112 * var(--u));
+  font-family: Charter, "Bitstream Charter", "Iowan Old Style", Georgia, serif;
+}
+.cvpage .cvmeta {
+  position: absolute; left: calc(26 * var(--u)); right: calc(26 * var(--u));
+  bottom: calc(28 * var(--u));
+  border-top: calc(0.2 * var(--u)) solid rgba(242,246,251,0.30);
+  padding-top: calc(6 * var(--u));
+  display: flex; justify-content: space-between; align-items: flex-end;
+  font-size: calc(8.4 * 0.3528 * var(--u)); letter-spacing: 0.16em;
+  text-transform: uppercase; color: #A6BCD8;
+}
+.cvpage .cvmeta b {
+  display: block; color: #F2F6FB; font-size: calc(10.4 * 0.3528 * var(--u));
+  letter-spacing: 0.08em; font-weight: 700;
+}
+.cvpage .cvmeta .cvr { text-align: right; }
+.cvpage .cvstartwrap {
+  position: absolute; left: 0; right: 0; bottom: calc(52 * var(--u));
+  display: flex; justify-content: center;
+}
+#btn-start {
+  font: inherit; font-size: calc(12.5 * 0.3528 * var(--u));
+  letter-spacing: 0.14em; text-transform: uppercase; font-weight: 700;
+  color: #0A1F4C; background: #C9A66B;
+  border: 0; border-radius: calc(1.2 * var(--u));
+  padding: calc(4.2 * var(--u)) calc(16 * var(--u));
+  box-shadow: 0 calc(0.8 * var(--u)) calc(2.4 * var(--u)) rgba(0,0,0,0.38);
+  cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+#btn-start:active { transform: translateY(calc(0.3 * var(--u))); background: #D8B87E; }
+body[data-page="cover"] .bar { display: none; }
+
+#cvoverlay { position: fixed; inset: 0; z-index: 9000; background: #050E28; }
+#cvoverlay.gone { display: none; }
+#cvoverlay .cvwrap { height: 100vh; height: 100dvh; }
+</style>
+</head>
+<body class="" data-page="index">
+<header class="bar">
+  <a class="bar-b" href="./" aria-label="Contents">Contents</a>
+  <div class="bar-t">Contents</div>
+  <div class="bar-r">
+    <button class="bar-b" id="btn-marks" aria-label="My marks">Marks</button>
+    <button class="bar-b" id="btn-mode" aria-label="Switch between bright and dark">Dark</button>
+    <button class="bar-b" id="btn-read" aria-label="Reading settings">Aa</button>
+  </div>
+</header>
+<main class="wrap">
+<div id="cvoverlay">
+<div class="cvwrap"><div class="cvpage">
+  <div class="cvweave"></div>
+  <div class="cvgrain"></div>
+<svg class="cvplan" viewBox="90 20 1080 1400" fill="none" preserveAspectRatio="xMidYMid meet">
+
+    <!-- gennaker: tacked at the bowsprit tip, head just below the masthead -->
+    <g class="kite">
+      <path d="M120 1180 C 300 860 520 400 866 64 C 812 420 706 820 556 1124 Z"
+            fill="#FFFFFF" fill-opacity="0.045" stroke-width="2.4"/>
+      <path d="M232 1006 C 386 806 556 512 700 274" stroke-width="1.3" opacity="0.5"/>
+    </g>
+
+    <!-- mainsail: luff on the bent mast, wide head, strongly roached leech -->
+    <g class="ink">
+      <path d="M878 56 C 988 82 1058 206 1090 424 C 1114 644 1120 884 1118 1066 L 716 1086
+               C 716 1086 711 700 712 482 C 760 322 830 152 878 56 Z" stroke-width="3.2"/>
+    </g>
+
+    <!-- jib: battened, tacked at the stemhead -->
+    <g class="ink">
+      <path d="M712 482 L392 1162 L676 1146 Z" stroke-width="2.8"/>
+    </g>
+
+    <!-- spars and rigging -->
+    <g class="thin">
+      <path d="M705 1198 L712 482 C 760 322 830 152 878 56" stroke-width="3.6"/>
+      <path d="M716 1086 L1120 1068" stroke-width="3.0"/>
+      <path d="M392 1162 L120 1180" stroke-width="3.0"/>
+      <path d="M874 60 L1000 92" stroke-width="4.2"/>
+      <path d="M712 486 L392 1162" stroke-width="2.2"/>
+      <path d="M712 500 L470 1188 M712 500 L950 1184" stroke-width="1.4"/>
+    </g>
+
+    <!-- mainsail battens -->
+    <g class="thin" stroke-width="1.9">
+      <path d="M866 128 L1006 106"/>
+      <path d="M846 252 L1052 228"/>
+      <path d="M816 452 L1096 432"/>
+      <path d="M782 662 L1112 648"/>
+      <path d="M750 872 L1118 860"/>
+      <path d="M724 1042 L1118 1036"/>
+    </g>
+    <!-- jib battens -->
+    <g class="thin" stroke-width="1.7">
+      <path d="M600 690 L702 684"/>
+      <path d="M510 880 L698 872"/>
+      <path d="M448 1012 L694 1004"/>
+    </g>
+
+    <!-- hull, wings, foils and waterline -->
+    <g class="ink">
+      <path d="M352 1190 L1142 1182 L1136 1236 C 1000 1268 620 1268 400 1232 Z" stroke-width="3.2"/>
+      <path d="M700 1188 L1142 1182" stroke-width="2.0"/>
+      <path d="M706 1196 L1140 1190" stroke-width="1.4"/>
+      <path d="M716 1250 C 714 1330 726 1376 744 1402 L 776 1400 C 770 1330 762 1284 758 1248 Z" stroke-width="2.6"/>
+      <path d="M1074 1246 C 1070 1324 1078 1372 1094 1400 L 1124 1398 C 1118 1326 1114 1282 1112 1244 Z" stroke-width="2.6"/>
+    </g>
+    <g class="thin">
+      <path d="M150 1272 L1160 1272" stroke-width="1.4" opacity="0.7"/>
+    </g>
+  </svg>
+  <div class="cvspine"></div>
+  <div class="cvvignette"></div>
+  <div class="cvkeyline"></div>
+  <div class="cvplate">
+    <p class="cveyebrow">ESP 5 &middot; 49er Campaign &middot; Los Angeles 2028</p>
+    <h1>Advanced Olympic<br>49er Sailing<span class="cvlight">Theory</span></h1>
+    <div class="cvrule"></div>
+    <p class="cvsub">The theory behind the decisions a two-person skiff crew makes: racing rules and scoring,
+      aerodynamics and hydrodynamics, rig and trim, boat handling, weather, waves and current,
+      starting, tactics, performance data and regatta execution.</p>
+  </div>
+  <div class="cvstartwrap"><button id="btn-start" type="button">Start</button></div>
+  <div class="cvmeta">
+    <div>Prepared for<b>Conrad and Antonio</b></div>
+    <div class="cvr">Corrected draft<b>14 September 2026 &middot; build 7</b></div>
+  </div>
+</div></div>
+</div><button class="tourbtn" id="btn-tour" aria-label="Hear how this book works"><span class="tourbtn-i" aria-hidden="true">&#9654;</span><span class="tourbtn-l">Click Me</span></button><h1 class="big">Advanced Olympic 49er Sailing Theory</h1><p class="sub">Prepared for Conrad and Antonio. ESP 5, 49er campaign, Los Angeles 2028. Structure follows Table of Contents v2 after the review of 11 September 2026. Build of 14 September 2026.</p><p class="sub"><a class="pn" href="about.html">How to read this book and its tags</a></p><h2 class="parth">Part I — Performance Architecture</h2><ol class="chlist"><li class="chrow"><a class="chlink" href="ch1.html"><span class="chnum">1</span><span>The 49er Performance System</span></a><details class="subs"><summary>4 sections</summary><ol class="seclist"><li><a href="ch1.html#sec-1-1"><span class="n">1.1</span>The 49er as a coupled aerodynamic, hydrodynamic, and crew-control system</a></li><li><a href="ch1.html#sec-1-2"><span class="n">1.2</span>Performance priorities by wind strength and sea state</a></li><li><a href="ch1.html#sec-1-3"><span class="n">1.3</span>Speed, VMG, control margin, and tactical freedom</a></li><li><a href="ch1.html#sec-1-4"><span class="n">1.4</span>Building a 49er performance model</a></li></ol></details></li><li class="chrow"><a class="chlink" href="ch2.html"><span class="chnum">2</span><span>Rig and Sail-Plan Optimisation</span></a><details class="subs"><summary>6 sections</summary><ol class="seclist"><li><a href="ch2.html#sec-2-1"><span class="n">2.1</span>Mast bend, rake, prebend, and rig stiffness</a></li><li><a href="ch2.html#sec-2-2"><span class="n">2.2</span>Shroud load, spreader geometry, and forestay tension</a></li><li><a href="ch2.html#sec-2-3"><span class="n">2.3</span>Mainsail depth, twist, leech stability, and depowering</a></li><li><a href="ch2.html#sec-2-4"><span class="n">2.4</span>Jib entry, slot control, and jib–main interaction</a></li><li><a href="ch2.html#sec-2-5"><span class="n">2.5</span>Cunningham, vang, outhaul, and dynamic shape control</a></li><li><a href="ch2.html#sec-2-6"><span class="n">2.6</span>Mode-specific tuning across the wind range</a></li></ol></details></li><li class="chrow"><a class="chlink" href="ch3.html"><span class="chnum">3</span><span>Aerodynamic Theory</span></a><details class="subs"><summary>7 sections</summary><ol class="seclist"><li><a href="ch3.html#sec-3-1"><span class="n">3.1</span>Apparent-wind geometry at skiff speeds</a></li><li><a href="ch3.html#sec-3-2"><span class="n">3.2</span>Lift, drag, and effective angle of attack</a></li><li><a href="ch3.html#sec-3-3"><span class="n">3.3</span>Mainsail–jib interaction</a></li><li><a href="ch3.html#sec-3-4"><span class="n">3.4</span>Spanwise loading and twist management</a></li><li><a href="ch3.html#sec-3-6"><span class="n">3.6</span>Gennaker flow and projection</a></li><li><a href="ch3.html#sec-3-7"><span class="n">3.7</span>Aero–hydrodynamic coupling</a></li><li><a href="ch3.html#sec-3-8"><span class="n">3.8</span>Aerodynamic performance process</a></li></ol></details></li><li class="chrow"><a class="chlink" href="ch4.html"><span class="chnum">4</span><span>Hydrodynamics and Foil Control</span></a><details class="subs"><summary>4 sections</summary><ol class="seclist"><li><a href="ch4.html#sec-4-2"><span class="n">4.2</span>Wetted area and longitudinal hull trim</a></li><li><a href="ch4.html#sec-4-3"><span class="n">4.3</span>Heel, leeway, and sideforce management</a></li><li><a href="ch4.html#sec-4-4"><span class="n">4.4</span>Centreboard loading and rake</a></li><li><a href="ch4.html#sec-4-5"><span class="n">4.5</span>Rudder load and steering efficiency</a></li></ol></details></li></ol><h2 class="parth">Part II — Crew Control and Boat Handling</h2><ol class="chlist"><li class="chrow"><a class="chlink" href="ch5.html"><span class="chnum">5</span><span>Crew Kinetics and Balance</span></a><details class="subs"><summary>1 section</summary><ol class="seclist"><li><a href="ch5.html#sec-5-2"><span class="n">5.2</span>Righting moment, trapeze geometry, and wire tension</a></li></ol></details></li><li class="chrow"><a class="chlink" href="ch6.html"><span class="chnum">6</span><span>Upwind Performance Modes</span></a><details class="subs"><summary>3 sections</summary><ol class="seclist"><li><a href="ch6.html#sec-6-1"><span class="n">6.1</span>Fast mode, pointing mode, and recovery mode</a></li><li><a href="ch6.html#sec-6-5"><span class="n">6.5</span>Leeway, rudder angle, and directional stability</a></li><li><a href="ch6.html#sec-6-6"><span class="n">6.6</span>Acceleration after tacks, waves, and disturbed air</a></li></ol></details></li><li class="chrow"><a class="chlink" href="ch7.html"><span class="chnum">7</span><span>Downwind and Gennaker Modes</span></a><details class="subs"><summary>2 sections</summary><ol class="seclist"><li><a href="ch7.html#sec-7-1"><span class="n">7.1</span>VMG, pressure, and tactical low modes</a></li><li><a href="ch7.html#sec-7-3"><span class="n">7.3</span>Gennaker trim, projection, and luff stability</a></li></ol></details></li><li class="chrow"><a class="chlink" href="ch8.html"><span class="chnum">8</span><span>High-Load Manoeuvres</span></a><details class="subs"><summary>7 sections</summary><ol class="seclist"><li><a href="ch8.html#sec-8-1"><span class="n">8.1</span>Tack mechanics and exit-speed preservation</a></li><li><a href="ch8.html#sec-8-3"><span class="n">8.3</span>Wave- and gust-timed tacks</a></li><li><a href="ch8.html#sec-8-4"><span class="n">8.4</span>High-apparent-wind gybes</a></li><li><a href="ch8.html#sec-8-5"><span class="n">8.5</span>Gennaker rotation and sheet-load management</a></li><li><a href="ch8.html#sec-8-6"><span class="n">8.6</span>Bear-aways, gybe sets, and offset-mark manoeuvres</a></li><li><a href="ch8.html#sec-8-7"><span class="n">8.7</span>Gate roundings and exit-speed control</a></li><li><a href="ch8.html#sec-8-8"><span class="n">8.8</span>Loss-of-control recovery and capsize management</a></li></ol></details></li></ol><h2 class="parth">Part III — Racing Tactics and Strategy</h2><ol class="chlist"><li class="chrow"><a class="chlink" href="ch9.html"><span class="chnum">9</span><span>Starting at 49er Speeds</span></a><details class="subs"><summary>7 sections</summary><ol class="seclist"><li><a href="ch9.html#sec-9-1"><span class="n">9.1</span>Line bias, geometry, and time-on-distance modelling</a></li><li><a href="ch9.html#sec-9-2"><span class="n">9.2</span>Final-approach planning and line access</a></li><li><a href="ch9.html#sec-9-3"><span class="n">9.3</span>Acceleration lanes and disturbed-air management</a></li><li><a href="ch9.html#sec-9-4"><span class="n">9.4</span>Committee-boat-end and pin-end frameworks</a></li><li><a href="ch9.html#sec-9-5"><span class="n">9.5</span>Risk-adjusted line position</a></li><li><a href="ch9.html#sec-9-6"><span class="n">9.6</span>Bail-out decisions and late-start recovery</a></li><li><a href="ch9.html#sec-9-7"><span class="n">9.7</span>Final-minute communication and task sequencing</a></li></ol></details></li><li class="chrow"><a class="chlink" href="ch10.html"><span class="chnum">10</span><span>Upwind Tactical Theory</span></a><details class="subs"><summary>9 sections</summary><ol class="seclist"><li><a href="ch10.html#sec-10-1"><span class="n">10.1</span>Strategic side selection</a></li><li><a href="ch10.html#sec-10-2"><span class="n">10.2</span>Oscillating shift management</a></li><li><a href="ch10.html#sec-10-3"><span class="n">10.3</span>Persistent shift management</a></li><li><a href="ch10.html#sec-10-4"><span class="n">10.4</span>Lane control and fleet geometry</a></li><li><a href="ch10.html#sec-10-5"><span class="n">10.5</span>Tactical modes and relative boat speed</a></li><li><a href="ch10.html#sec-10-6"><span class="n">10.6</span>Cross management and engagements</a></li><li><a href="ch10.html#sec-10-7"><span class="n">10.7</span>Dirty-air recovery</a></li><li><a href="ch10.html#sec-10-8"><span class="n">10.8</span>Layline discipline</a></li><li><a href="ch10.html#sec-10-9"><span class="n">10.9</span>Upwind tactical process</a></li></ol></details></li><li class="chrow"><a class="chlink" href="ch11.html"><span class="chnum">11</span><span>Downwind Tactical Theory</span></a><details class="subs"><summary>8 sections</summary><ol class="seclist"><li><a href="ch11.html#sec-11-1"><span class="n">11.1</span>Downwind fleet geometry</a></li><li><a href="ch11.html#sec-11-2"><span class="n">11.2</span>Pressure routing versus angle routing</a></li><li><a href="ch11.html#sec-11-3"><span class="n">11.3</span>Gybing strategy</a></li><li><a href="ch11.html#sec-11-4"><span class="n">11.4</span>High mode, low mode, and passing opportunities</a></li><li><a href="ch11.html#sec-11-5"><span class="n">11.5</span>Covering and defence</a></li><li><a href="ch11.html#sec-11-6"><span class="n">11.6</span>Attacking and creating separation</a></li><li><a href="ch11.html#sec-11-7"><span class="n">11.7</span>Leeward gate management</a></li><li><a href="ch11.html#sec-11-8"><span class="n">11.8</span>Downwind tactical process</a></li></ol></details></li><li class="chrow"><a class="chlink" href="ch12.html"><span class="chnum">12</span><span>Racecourse Strategy</span></a><details class="subs"><summary>8 sections</summary><ol class="seclist"><li><a href="ch12.html#sec-12-1"><span class="n">12.1</span>Pre-race racecourse model</a></li><li><a href="ch12.html#sec-12-2"><span class="n">12.2</span>Wind-field structure</a></li><li><a href="ch12.html#sec-12-3"><span class="n">12.3</span>Current and tidal strategy</a></li><li><a href="ch12.html#sec-12-4"><span class="n">12.4</span>Wave-field strategy</a></li><li><a href="ch12.html#sec-12-5"><span class="n">12.5</span>Course geometry and race management</a></li><li><a href="ch12.html#sec-12-6"><span class="n">12.6</span>Information hierarchy</a></li><li><a href="ch12.html#sec-12-7"><span class="n">12.7</span>Strategic adaptation during racing</a></li><li><a href="ch12.html#sec-12-8"><span class="n">12.8</span>Strategic review and learning system</a></li></ol></details></li><li class="chrow"><a class="chlink" href="ch13.html"><span class="chnum">13</span><span>Rules and Competitive Positioning</span></a><details class="subs"><summary>7 sections</summary><ol class="seclist"><li><a href="ch13.html#sec-13-1"><span class="n">13.1</span>Rights and obligations at high closing speeds</a></li><li><a href="ch13.html#sec-13-2"><span class="n">13.2</span>Windward–leeward interactions</a></li><li><a href="ch13.html#sec-13-3"><span class="n">13.3</span>Proper course and luffing limits</a></li><li><a href="ch13.html#sec-13-4"><span class="n">13.4</span>Mark-room and zone management</a></li><li><a href="ch13.html#sec-13-5"><span class="n">13.5</span>Overlap creation and overlap breakage</a></li><li><a href="ch13.html#sec-13-6"><span class="n">13.6</span>Rule 42 and kinetic technique</a></li><li><a href="ch13.html#sec-13-7"><span class="n">13.7</span>Protest-risk management</a></li></ol></details></li></ol><h2 class="parth">Part IV — Equipment and Development</h2><ol class="chlist"><li class="chrow"><a class="chlink" href="ch14.html"><span class="chnum">14</span><span>Equipment Optimisation and Reliability</span></a><details class="subs"><summary>8 sections</summary><ol class="seclist"><li><a href="ch14.html#sec-14-1"><span class="n">14.1</span>Repeatable measurement-controlled rig set-up</a></li><li><a href="ch14.html#sec-14-2"><span class="n">14.2</span>Mast, shroud, spreader, and forestay inspection</a></li><li><a href="ch14.html#sec-14-3"><span class="n">14.3</span>Centreboard and rudder preparation</a></li><li><a href="ch14.html#sec-14-5"><span class="n">14.5</span>Control-line friction and purchase efficiency</a></li><li><a href="ch14.html#sec-14-6"><span class="n">14.6</span>Gennaker-system reliability</a></li><li><a href="ch14.html#sec-14-7"><span class="n">14.7</span>High-load fittings, fasteners, and failure prevention</a></li><li><a href="ch14.html#sec-14-8"><span class="n">14.8</span>Spares, redundancy, and on-water repairs</a></li><li><a href="ch14.html#sec-14-9"><span class="n">14.9</span>Measurement compliance and equipment risk</a></li></ol></details></li><li class="chrow"><a class="chlink" href="ch15.html"><span class="chnum">15</span><span>Training and Performance Development</span></a><details class="subs"><summary>11 sections</summary><ol class="seclist"><li><a href="ch15.html#sec-15-1"><span class="n">15.1</span>Training blocks and performance objectives</a></li><li><a href="ch15.html#sec-15-2"><span class="n">15.2</span>Deliberate practice for speed, handling, and tactics</a></li><li><a href="ch15.html#sec-15-3"><span class="n">15.3</span>Isolated drills versus race simulation</a></li><li><a href="ch15.html#sec-15-4"><span class="n">15.4</span>Wind-range and sea-state-specific training</a></li><li><a href="ch15.html#sec-15-5"><span class="n">15.5</span>Training-partner benchmarking</a></li><li><a href="ch15.html#sec-15-6"><span class="n">15.6</span>Video review and shared crew analysis</a></li><li><a href="ch15.html#sec-15-7"><span class="n">15.7</span>GPS, compass, heading, and speed-data analysis</a></li><li><a href="ch15.html#sec-15-8"><span class="n">15.8</span>Manoeuvre, leg, and race performance metrics</a></li><li><a href="ch15.html#sec-15-9"><span class="n">15.9</span>Physical preparation for power, endurance, and resilience</a></li><li><a href="ch15.html#sec-15-10"><span class="n">15.10</span>Psychological readiness and decision-making under pressure</a></li><li><a href="ch15.html#sec-15-11"><span class="n">15.11</span>Crew communication and cohesion systems</a></li></ol></details></li></ol><h2 class="parth">Part V — Championship Execution</h2><ol class="chlist"><li class="chrow"><a class="chlink" href="ch16.html"><span class="chnum">16</span><span>Regatta Execution and Campaign Management</span></a><details class="subs"><summary>10 sections</summary><ol class="seclist"><li><a href="ch16.html#sec-16-1"><span class="n">16.1</span>Venue reconnaissance and knowledge capture</a></li><li><a href="ch16.html#sec-16-2"><span class="n">16.2</span>Daily tuning and environmental decision protocols</a></li><li><a href="ch16.html#sec-16-3"><span class="n">16.3</span>Pre-launch, pre-race, and between-race routines</a></li><li><a href="ch16.html#sec-16-4"><span class="n">16.4</span>Coach–crew and shore-team information flow</a></li><li><a href="ch16.html#sec-16-5"><span class="n">16.5</span>Race debrief methodology</a></li><li><a href="ch16.html#sec-16-6"><span class="n">16.6</span>Separating recurring performance losses from isolated incidents</a></li><li><a href="ch16.html#sec-16-7"><span class="n">16.7</span>Score management across qualifying and finals</a></li><li><a href="ch16.html#sec-16-8"><span class="n">16.8</span>Adaptation after damage, penalties, or poor results</a></li><li><a href="ch16.html#sec-16-9"><span class="n">16.9</span>Travel, recovery, logistics, and equipment preservation</a></li><li><a href="ch16.html#sec-16-10"><span class="n">16.10</span>Post-event review and training-priority setting</a></li></ol></details></li></ol><h2 class="parth">Appendices</h2><ol class="chlist"><li class="chrow"><a class="chlink" href="chA.html"><span class="chnum">A</span><span>Technical Reference Tools</span></a><details class="subs"><summary>4 sections</summary><ol class="seclist"><li><a href="chA.html#sec-A-1"><span class="n">A.1</span>Wind-range tuning matrix</a></li><li><a href="chA.html#sec-A-2"><span class="n">A.2</span>Sea-state and wave-mode decision matrix</a></li><li><a href="chA.html#sec-A-4"><span class="n">A.4</span>Rig-settings recording sheet</a></li><li><a href="chA.html#sec-A-5"><span class="n">A.5</span>Equipment inspection and maintenance checklist</a></li></ol></details></li><li class="chrow"><a class="chlink" href="chB.html"><span class="chnum">B</span><span>Racing Reference Tools</span></a><details class="subs"><summary>4 sections</summary><ol class="seclist"><li><a href="chB.html#sec-B-1"><span class="n">B.1</span>Start and first-beat decision framework</a></li><li><a href="chB.html#sec-B-2"><span class="n">B.2</span>Racecourse observation and briefing template</a></li><li><a href="chB.html#sec-B-4"><span class="n">B.4</span>Post-race debrief template</a></li><li><a href="chB.html#sec-B-5"><span class="n">B.5</span>Performance-data glossary and calculation conventions</a></li></ol></details></li><li class="chrow"><a class="chlink" href="chC.html"><span class="chnum">C</span><span>Regulatory Reference</span></a><details class="subs"><summary>3 sections</summary><ol class="seclist"><li><a href="chC.html#sec-C-1"><span class="n">C.1</span>Olympic 49er class-document index</a></li><li><a href="chC.html#sec-C-2"><span class="n">C.2</span>Racing Rules of Sailing reference index</a></li><li><a href="chC.html#sec-C-3"><span class="n">C.3</span>Event-format and scoring reference notes</a></li></ol></details></li></ol><h2 class="parth">Reference</h2><ol class="chlist"><li class="chrow"><a class="chlink" href="glossary.html"><span class="chnum">?</span><span>What the terms mean</span></a></li><li class="chrow"><a class="chlink" href="sources.html"><span class="chnum">S</span><span>Verified source list</span></a></li><li class="chrow"><a class="chlink" href="marks.html"><span class="chnum">M</span><span>My highlights, notes and requests</span></a></li></ol>
+</main>
+<script src="data.js"></script>
+<script src="app.js"></script>
+<script>
+(function () {
+  var o = document.getElementById('cvoverlay');
+  if (!o) return;
+  function hide() {
+    o.classList.add('gone');
+    /* If the cover's CSS did not reach this page, the class hides nothing and
+       the reader is left scrolling past the cover. Take the node out instead. */
+    try {
+      if (getComputedStyle(o).display !== 'none' && o.parentNode) {
+        o.parentNode.removeChild(o);
+      }
+    } catch (e) { if (o.parentNode) o.parentNode.removeChild(o); }
+  }
+  var seen = false;
+  try { seen = sessionStorage.getItem('k49.cover.v1') === '1'; } catch (e) {}
+  if (seen) { hide(); return; }
+  document.documentElement.style.overflow = 'hidden';
+  function go(e) {
+    if (e) { e.preventDefault(); }
+    hide();
+    document.documentElement.style.overflow = '';
+    try { sessionStorage.setItem('k49.cover.v1', '1'); } catch (e2) {}
+  }
+  /* bound on the document rather than on the button, so a missed binding or a
+     tap that lands beside the button still gets the reader into the book */
+  document.addEventListener('click', function (e) {
+    if (!o.parentNode) return;
+    if (o.contains(e.target)) go(e);
+  }, true);
+  document.addEventListener('keydown', function (e) {
+    if (!o.parentNode) return;
+    if (e.key === 'Enter' || e.key === ' ' || e.key === 'Escape') go(e);
+  }, true);
+})();
+</script>
+</body></html>

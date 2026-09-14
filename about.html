@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="49er Theory">
+<meta name="theme-color" content="#0A1F4C">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="stylesheet" href="app.css">
+<title>About this book</title>
+<script>
+/* set text size and background before first paint so there is no flash */
+try {
+  var p = JSON.parse(localStorage.getItem('k49.prefs.v1') || '{}');
+  var s = ['17px','20px','23px','26px'][p.size == null ? 1 : p.size];
+  document.documentElement.style.setProperty('--fs', s);
+  var sysDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  var th = p.theme || (sysDark ? 'dark' : 'light');
+  document.addEventListener('DOMContentLoaded', function () {
+    document.body.classList.add('t-' + th);
+  });
+} catch (e) {}
+</script>
+
+</head>
+<body class="reading" data-page="about">
+<header class="bar">
+  <a class="bar-b" href="./" aria-label="Contents">Contents</a>
+  <div class="bar-t">About this book</div>
+  <div class="bar-r">
+    <button class="bar-b" id="btn-marks" aria-label="My marks">Marks</button>
+    <button class="bar-b" id="btn-mode" aria-label="Switch between bright and dark">Dark</button>
+    <button class="bar-b" id="btn-read" aria-label="Reading settings">Aa</button>
+  </div>
+</header>
+<main class="wrap">
+<h1>About this book</h1>
+<p>This is the theory behind the decisions a 49er crew makes, written down so that it can be argued with, tested on the water and corrected. It is not a coaching programme and it carries no motivation. Each section states a principle, the mechanism behind it, and how the mechanism shows up where the crew can see it. Each subsection of the analytical chapters closes with a gold-medal standard written as an observable behaviour, so that the standard can be judged from a coach boat or from a video rather than argued about.</p>
+<h2>How to read the tags</h2>
+<p>Every figure, rule number, dimension, date and quotation carries a tag. A tag beginning with S refers to the verified source list, and every one of those was checked against its source on 8 September 2026. A tag beginning with W refers to a page fetched while that chapter was written, listed at the end of the chapter. Touch any tag to see the citation without losing your place.</p>
+<p>A statement without a tag is theory: mechanism, cause and effect, or decision logic, to be tested by the crew. Where a value belongs to the crew's own logged settings, targets or thresholds, the text shows <span class="cv">crew value</span>. Nothing in those places has been guessed, and no 49er polar, mast-rake table or wind-band settings table has been published that could stand in for the crew's own numbers.</p>
+<h2>Two figures come from other classes</h2>
+<p>They are used for their mechanism rather than their value. The wind-shadow distances in boat lengths come from Baird's America's Cup class testing <a class="tg tg-s" href="sources.html#S56" data-s="56">S56</a>, and the heel band of plus or minus 5 and 10 degrees comes from skiff coaching material written for the 29er <a class="tg tg-s" href="sources.html#S36" data-s="36">S36</a>. A 49er carries its apparent wind further forward than either boat, so both are starting points to be measured against this boat and replaced by the crew's own figures.</p>
+<h2>Numbering</h2>
+<p>Section numbers follow the original table of contents. Gaps mark the 47 lines removed in the review of 11 September 2026, so every surviving line remains traceable to that review. Chapters 5, 6 and 7 are short because most of their sections were removed; they are kept as chapters rather than merged, because the review removed lines and did not ask for restructuring.</p>
+<h2>Corrections in this draft</h2>
+<p>This draft has been through two rounds of verification. On 13 September six errors were found in the first draft and fixed, together with three further instances of the same two mistakes that a pass over those corrections then found. On 14 September the physics, geometry, statistics and arithmetic of the whole book were checked for the first time, by seven independent readers working in parallel. Every one of them found errors. Sixty-seven findings were corrected, and a further pass over those corrections found fourteen defects in the corrections themselves, which are fixed here too.</p>
+<p>The largest of the first round was a sign. Sections 4.3.2, 4.3.4 and 4.4.5, and one explanation panel, had a leeward-heeled daggerboard's force acting partly downward. It acts partly upward: the board's tip swings to windward, so its vertical component opposes the rig's rather than adding to it, and a text in which both push down would load an action-reaction pair with a force that has nowhere to go. For the same reason a windward-heeled rig's force does not point to windward; its lateral part shrinks and part of it lifts.</p>
+<p>The same passages also attributed the downward push to the boat's drive. It comes out of the side force, as 3.7.1 always had it, and drive falls separately because heel lowers the angle at which the sails meet the flow. In 4.4.5 the turning moment from windward heel was given as acting to windward; it acts to leeward and bears the boat away. In 8.4 squaring up was said to strengthen the apparent wind, where it weakens it. In 9.1 the line-bias comparison was stated as a rule rather than as a product of length and angle. In 10.2.5, 10.3.1 and 10.3.6 the persistent-shift test was worded so that it inverted when read off a compass.</p>
+<p>The second round changed these. The apparent wind moves aft, not forward, when the true wind angle opens. The depowering order is the one section 2.3 states, and the four other statements of it now agree with it. The 49er has no traveller, and the passages that used one now name the control the boat has. Righting moment is a weight multiplied by a lever, not a mass, and the rig's 165 kilogram rating is a structural ceiling rather than a righting-moment budget. A regression coefficient is not a measure of influence until it is converted into the same currency as the coefficients it is ranked against, and an association between manoeuvres and shorter races does not license a manoeuvre. Current setting toward the windward mark makes a boat tacking on the wind-only layline overstand. The gain from a five degree shift is twelve per cent of separation measured as distance sailed on a close-hauled course, and about nine per cent measured to windward, and each use now says which. A race that becomes the new discard costs the score it displaces. In appendix B the acceleration margin is added to the time to the line and not to the time remaining; as it stood before, the start procedure tolerated being late by twice the margin.</p>
+<p>Twenty-five passages were left as they stand because settling them needs a source that could not be checked, or a sailing judgement rather than a calculation. They are listed in a separate note.</p>
+<h2>Pending</h2>
+<p>Voice notes were announced on five lines: 6.1, 8.6, 13.6.1, C.2 and C.3. Those notes had not arrived when this draft was built, so the five sections stand as written and will be revised when the notes are in. Marks placed in those five sections may not survive that revision; marks everywhere else will.</p>
+<h2>What the dotted lines mark</h2>
+<p>A dotted underline in the text opens a short explanation of the mechanism behind the sentence. They are there for the technical and scientific part: fluid mechanics, statistics and measurement, meteorology, materials and class rules. They are deliberately not placed under ordinary sailing vocabulary, so apparent wind, leeway, angle of attack, dirty air, ladder rungs, leverage, oscillating and persistent shifts, weather helm, polars, the groove and headstay sag carry no marker. Every one of those still has its entry on the terms page if you ever want it.</p>
+<h2>Marking as you read</h2>
+<p>Select any passage to highlight it, attach a note, or ask for more detail on it. Every chapter also carries a request button beside its title. Nothing you mark leaves the iPad until you tap Export on the Marks page, which produces a list of section number, passage and comment to send on.</p>
+
+</main>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body></html>

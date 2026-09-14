@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="49er Theory">
+<meta name="theme-color" content="#0A1F4C">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="stylesheet" href="app.css">
+<title>5. Crew Kinetics and Balance</title>
+<script>
+/* set text size and background before first paint so there is no flash */
+try {
+  var p = JSON.parse(localStorage.getItem('k49.prefs.v1') || '{}');
+  var s = ['17px','20px','23px','26px'][p.size == null ? 1 : p.size];
+  document.documentElement.style.setProperty('--fs', s);
+  var sysDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  var th = p.theme || (sysDark ? 'dark' : 'light');
+  document.addEventListener('DOMContentLoaded', function () {
+    document.body.classList.add('t-' + th);
+  });
+} catch (e) {}
+</script>
+
+</head>
+<body class="reading" data-page="chapter">
+<header class="bar">
+  <a class="bar-b" href="./" aria-label="Contents">Contents</a>
+  <div class="bar-t">5. Crew Kinetics and Balance</div>
+  <div class="bar-r">
+    <button class="bar-b" id="btn-marks" aria-label="My marks">Marks</button>
+    <button class="bar-b" id="btn-mode" aria-label="Switch between bright and dark">Dark</button>
+    <button class="bar-b" id="btn-read" aria-label="Reading settings">Aa</button>
+  </div>
+</header>
+<main class="wrap">
+<article class="ch" data-ch="5" data-key="5"><p class="eyebrow">Part II — Crew Control and Boat Handling</p><div class="chhead"><h1><span class="chnum">5</span>Crew Kinetics and Balance</h1><button class="askbtn" id="ask-chapter" data-ch="5" data-title="Crew Kinetics and Balance"><span class="askbtn-i" aria-hidden="true">?</span><span class="askbtn-l">Request more detail</span></button></div><details class="secnav"><summary>Sections in this chapter</summary><ol class="secnav-l"><li><a href="#sec-5-2"><span class="n">5.2</span>Righting moment, trapeze geometry, and wire tension</a></li></ol></details><div class="chintro"><p data-b="5.0:1">This chapter covers the mechanics by which the crew's bodies keep the 49er's sail plan upright and driving: the righting moment as the product of weight and horizontal lever, the extension of that lever by the wings and the twin trapeze, and the way trapeze height, wire tension and body angle turn a fixed mass budget into a moment held steadily through gusts, waves and manoeuvres. At the crew's request the chapter has been reduced to a single section, 5.2, and the original numbering is retained. The section connects three quantities the crew otherwise manages separately: the mass budget as stated by the class rules, the class association and the builders; the lever geometry that decides how much of that mass acts against the heeling moment; and the trapeze technique that decides how constant the lever is when the boat rolls or re-accelerates. The rest of the book treats the righting moment described here as the fixed quantity that sail power is trimmed to match, and rig set-up takes over where the lever has reached its maximum.</p>
+</div>
+<section class="sec" id="sec-5-2" data-sec="5.2"><h2><span class="secnum">5.2</span><span class="sectitle">Righting moment, trapeze geometry, and wire tension</span></h2><p data-b="5.2:1">Righting moment is the weight carried multiplied by the horizontal distance of that weight from the axis about which the hull heels, and in steady sailing it must equal the heeling moment of the rig <a class="tg tg-s" href="sources.html#S19" data-s="19">S19</a>. Hughes gives the crew's version: righting moment is crew weight applied over the <button type="button" class="gl" data-g="A1" aria-label="What this means">longest available lever</button> <a class="tg tg-s" href="sources.html#S25" data-s="25">S25</a>. Mass is fixed for the day, so the crew controls only the lever: its length and how steadily it is held.</p>
+<p data-b="5.2:2">The class and the builders fix the mass budget: a <button type="button" class="gl" data-g="A83" aria-label="What this means">minimum hull weight</button> including wings of 94.0 kg under class rule C.7.3 <a class="tg tg-s" href="sources.html#S3" data-s="3">S3</a>, a mast that "can support a combined crew weight of up to 165kg from its dual trapeze" <a class="tg tg-s" href="sources.html#S9" data-s="9">S9</a>, an optimum crew weight of 145 to 165 kg from Mackay <a class="tg tg-w" href="#W1" data-w="1">W1</a> and an ideal racing weight of 150 to 170 kg from Ovington <a class="tg tg-w" href="#W2" data-w="2">W2</a>. The crew is therefore the larger part of the sailing mass and the only part on a lever, since hull mass sits near the centreline. The wings carry the feet out to the boat's 2.9 m beam <a class="tg tg-s" href="sources.html#S9" data-s="9">S9</a><a class="tg tg-s" href="sources.html#S11" data-s="11">S11</a>, and the twin trapeze extends it again by holding each body on a wire from the hounds with its centre of mass well outboard of the feet. The crew's combined mass is <span class="cv">crew value</span>.</p>
+<p data-b="5.2:3">Trapeze height sets body angle, and body angle sets the lever. The lever is longest when the body lies perpendicular to the mast; Hughes' instruction is to get as close to that line as possible without going below it <a class="tg tg-w" href="#W3" data-w="3">W3</a>, since below it the lever shortens and the body meets the water at speed. The wire carries the weight and the feet the horizontal reaction, so a straight body on a low hook hangs its whole mass on the wire, and <span class="lm" data-l="B12">harness load is the evidence of a deployed lever<button type="button" class="lmb" data-l="B12" aria-label="Why this works">why</button></span>: "The goal is to always have consistent weight on the wire" <a class="tg tg-w" href="#W3" data-w="3">W3</a>. Bending at the knees or waist during clip-in <span class="lm" data-l="B13">moves the mass inboard onto the legs and collapses the lever as the boat re-accelerates<button type="button" class="lmb" data-l="B13" aria-label="Why this works">why</button></span> <a class="tg tg-w" href="#W3" data-w="3">W3</a>. A low body also <button type="button" class="gl" data-g="A77" aria-label="What this means">damps roll</button>: a mass above the heel axis moves outboard in a windward roll and inboard in a leeward one, so its moment feeds the roll, whereas a mass near the axis keeps almost the same lever through small roll angles. Low trapezing therefore dampens roll and <span class="lm" data-l="B14">keeps the sail plan upright for a higher percentage of the time<button type="button" class="lmb" data-l="B14" aria-label="Why this works">why</button></span> <a class="tg tg-s" href="sources.html#S25" data-s="25">S25</a> <a class="tg tg-w" href="#W3" data-w="3">W3</a>.</p>
+<p data-b="5.2:4">The lever is used up before the rig is depowered. As pressure builds the crew move outboard and lower while heel is held within the skiff coaching standard, "Flat is FLAT, +/- 5 degrees is acceptable, +/- 10 degrees is only just tolerable" <a class="tg tg-s" href="sources.html#S36" data-s="36">S36</a>. Once both bodies are straight and perpendicular to the mast, further heeling moment is removed at the rig, where the class tuning guide takes the cap shrouds progressively tighter above about 11 to 12 knots <a class="tg tg-s" href="sources.html#S13" data-s="13">S13</a>. Downwind the lever sets heel rather than opposing it, since the manual requires the boat "heeled to windward with the windward chine in the water" <a class="tg tg-s" href="sources.html#S12" data-s="12">S12</a>. An observer would see both bodies straight and near perpendicular to the mast whenever the boat is powered, harness loads that never slacken, and heel within 5 degrees <a class="tg tg-s" href="sources.html#S36" data-s="36">S36</a> of target above the wind speed of first full extension, <span class="cv">crew value</span>.</p>
+</section><section class="sec wsec" id="sec-sources"><h2><span class="sectitle">Sources added in this chapter</span></h2><div class="srcitem" id="W1"><span class="tg tg-w tg-def">W1</span> 49er Specifications, Mackay Boats: <a class="ext" href="https://mackayboats.com/index.cfm/boats/49er/" target="_blank" rel="noopener">https://mackayboats.com/index.cfm/boats/49er/</a></div><div class="srcitem" id="W2"><span class="tg tg-w tg-def">W2</span> 49er, Ovington Boats: <a class="ext" href="https://ovingtonboats.com/49er/" target="_blank" rel="noopener">https://ovingtonboats.com/49er/</a></div><div class="srcitem" id="W3"><span class="tg tg-w tg-def">W3</span> Proper Trapeze Technique (Hughes), Sailing World: <a class="ext" href="https://www.sailingworld.com/how-to/its-a-trap/" target="_blank" rel="noopener">https://www.sailingworld.com/how-to/its-a-trap/</a></div></section><nav class="pager"><a class="pn" href="ch4.html">Previous: 4. Hydrodynamics and Foil Control</a><a class="pn" href="ch6.html">Next: 6. Upwind Performance Modes</a></nav></article>
+</main>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body></html>

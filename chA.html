@@ -1,0 +1,515 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="49er Theory">
+<meta name="theme-color" content="#0A1F4C">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="stylesheet" href="app.css">
+<title>A. Technical Reference Tools</title>
+<script>
+/* set text size and background before first paint so there is no flash */
+try {
+  var p = JSON.parse(localStorage.getItem('k49.prefs.v1') || '{}');
+  var s = ['17px','20px','23px','26px'][p.size == null ? 1 : p.size];
+  document.documentElement.style.setProperty('--fs', s);
+  var sysDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  var th = p.theme || (sysDark ? 'dark' : 'light');
+  document.addEventListener('DOMContentLoaded', function () {
+    document.body.classList.add('t-' + th);
+  });
+} catch (e) {}
+</script>
+
+</head>
+<body class="reading" data-page="chapter">
+<header class="bar">
+  <a class="bar-b" href="./" aria-label="Contents">Contents</a>
+  <div class="bar-t">A. Technical Reference Tools</div>
+  <div class="bar-r">
+    <button class="bar-b" id="btn-marks" aria-label="My marks">Marks</button>
+    <button class="bar-b" id="btn-mode" aria-label="Switch between bright and dark">Dark</button>
+    <button class="bar-b" id="btn-read" aria-label="Reading settings">Aa</button>
+  </div>
+</header>
+<main class="wrap">
+<article class="ch" data-ch="A" data-key="A"><p class="eyebrow">Appendices</p><div class="chhead"><h1><span class="chnum">A</span>Technical Reference Tools</h1><button class="askbtn" id="ask-chapter" data-ch="A" data-title="Technical Reference Tools"><span class="askbtn-i" aria-hidden="true">?</span><span class="askbtn-l">Request more detail</span></button></div><details class="secnav"><summary>Sections in this chapter</summary><ol class="secnav-l"><li><a href="#sec-A-1"><span class="n">A.1</span>Wind-range tuning matrix</a></li><li><a href="#sec-A-2"><span class="n">A.2</span>Sea-state and wave-mode decision matrix</a></li><li><a href="#sec-A-4"><span class="n">A.4</span>Rig-settings recording sheet</a></li><li><a href="#sec-A-5"><span class="n">A.5</span>Equipment inspection and maintenance checklist</a></li></ol></details><div class="chintro"><p data-b="A.0:1">This appendix collects the four working documents the crew keeps beside the theory chapters. A.1 is the wind-range tuning matrix, the settings table by wind band; only the class tuning guide's published thresholds are sourced in it, and every other cell is a value the crew has logged and tested. A.2 is the sea-state and wave-mode decision matrix, which modifies the A.1 column for the water the boat is actually on, since the same wind over flat water and over a short steep sea calls for different modes, trim priorities and steering. A.4 is the recording sheet that turns each session into one row of data, the only route by which a number enters A.1 or a mode choice is confirmed in A.2. A.5 is the inspection and maintenance checklist that keeps the equipment in the state those settings assume, because a stretched wire or a moved spreader silently changes every number in A.1. The tools work together: A.4 feeds A.1, A.2 adjusts A.1 on the day, and A.5 protects the validity of all three.</p>
+</div>
+<section class="sec" id="sec-A-1" data-sec="A.1"><h2><span class="secnum">A.1</span><span class="sectitle">Wind-range tuning matrix</span></h2><p data-b="A.1:1">The matrix is a table of hypotheses, one column per wind band and one row per control, each cell holding the setting the crew expects to be fastest in that band on flat water. Very little of it can be sourced. The class tuning guide places the jib sheet in the middle hole and the track pins in the innermost holes for winds up to about 12 knots and flat water, and holds cap shroud tension at the baseline up to about 11 to 12 knots, then "progressively tighter to flatten the mainsail for progressively stronger winds" <a class="tg tg-s" href="sources.html#S13" data-s="13">S13</a>. No published 49er rake table by wind band and no published 49er polar exists in the fact base, so for every other column the crew's own logged values are the reference, and the cell reads <span class="cv">crew value</span> until the log fills it. The guide's jib settings are for flat water; in chop the A.2 row governs.</p>
+<p data-b="A.1:2">The mechanisms behind the columns are published. Cap shroud tension controls headstay sag, and sag makes the jib fuller <a class="tg tg-s" href="sources.html#S33" data-s="33">S33</a>. Mast bend flattens and depowers the mainsail, and diagonal wrinkles from clew to luff show over-bending <a class="tg tg-s" href="sources.html#S33" data-s="33">S33</a>. Luff tension induces mast bend and reduces power to the rig, and it is easy to over-vang the mainsail, which induces more mast bend than <button type="button" class="gl" data-g="A12" aria-label="What this means">luff curve</button> <a class="tg tg-s" href="sources.html#S12" data-s="12">S12</a>. Cunningham moves draft forward, outhaul flattens the foot, and downwind the vang controls leech twist once the mainsheet no longer pulls down <a class="tg tg-s" href="sources.html#S34" data-s="34">S34</a>. Rake is set for helm balance: raking the mast aft creates weather helm, and the target is 3 to 5 degrees of weather helm in moderate conditions <a class="tg tg-s" href="sources.html#S32" data-s="32">S32</a>. The lowers set the bend low in the mast; no published 49er figure covers them, so the crew calibrates them by sighting the mast. The Ovington manual's dock references with the mast stepped and no sails, forestay 40, side stays 28, intermediates 26 and backstays 17 on the Loos gauge <a class="tg tg-s" href="sources.html#S12" data-s="12">S12</a>, check that the rig has not moved between sessions; the crew's baseline is its own <span class="cv">crew value</span> on the same gauge.</p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th data-b="A.1:3">Control</th>
+<th data-b="A.1:4">Light</th>
+<th data-b="A.1:5">Light-medium</th>
+<th data-b="A.1:6">Medium-strong</th>
+<th data-b="A.1:7">Strong</th>
+<th data-b="A.1:8">Survival</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-b="A.1:9"><strong>True wind, knots</strong></td>
+<td data-b="A.1:10">up to <span class="cv">crew value</span></td>
+<td data-b="A.1:11"><span class="cv">crew value</span> to about 12 <a class="tg tg-s" href="sources.html#S13" data-s="13">S13</a></td>
+<td data-b="A.1:12">about 12 <a class="tg tg-s" href="sources.html#S13" data-s="13">S13</a> to <span class="cv">crew value</span></td>
+<td data-b="A.1:13"><span class="cv">crew value</span> to <span class="cv">crew value</span></td>
+<td data-b="A.1:14">above <span class="cv">crew value</span></td>
+</tr>
+<tr class="even">
+<td data-b="A.1:15">Cap shroud</td>
+<td data-b="A.1:16">Baseline tension <a class="tg tg-s" href="sources.html#S13" data-s="13">S13</a>; gauge value <span class="cv">crew value</span></td>
+<td data-b="A.1:17">Baseline tension, held up to about 11 to 12 knots <a class="tg tg-s" href="sources.html#S13" data-s="13">S13</a>; gauge value <span class="cv">crew value</span></td>
+<td data-b="A.1:18">Tighter than baseline, to flatten the mainsail <a class="tg tg-s" href="sources.html#S13" data-s="13">S13</a>; gauge value <span class="cv">crew value</span></td>
+<td data-b="A.1:19">Progressively tighter again as the wind rises <a class="tg tg-s" href="sources.html#S13" data-s="13">S13</a>; gauge value <span class="cv">crew value</span></td>
+<td data-b="A.1:20">Tighter again <a class="tg tg-s" href="sources.html#S13" data-s="13">S13</a>; gauge value <span class="cv">crew value</span></td>
+</tr>
+<tr class="odd">
+<td data-b="A.1:21">Lowers</td>
+<td data-b="A.1:22"><span class="cv">crew value</span></td>
+<td data-b="A.1:23"><span class="cv">crew value</span></td>
+<td data-b="A.1:24"><span class="cv">crew value</span></td>
+<td data-b="A.1:25"><span class="cv">crew value</span></td>
+<td data-b="A.1:26"><span class="cv">crew value</span></td>
+</tr>
+<tr class="even">
+<td data-b="A.1:27">Rake</td>
+<td data-b="A.1:28"><span class="cv">crew value</span></td>
+<td data-b="A.1:29"><span class="cv">crew value</span>; set so that weather helm is 3 to 5 degrees in moderate conditions <a class="tg tg-s" href="sources.html#S32" data-s="32">S32</a></td>
+<td data-b="A.1:30"><span class="cv">crew value</span></td>
+<td data-b="A.1:31"><span class="cv">crew value</span></td>
+<td data-b="A.1:32"><span class="cv">crew value</span></td>
+</tr>
+<tr class="odd">
+<td data-b="A.1:33">Jib car (track pins)</td>
+<td data-b="A.1:34">Innermost holes, flat water <a class="tg tg-s" href="sources.html#S13" data-s="13">S13</a></td>
+<td data-b="A.1:35">Innermost holes, flat water <a class="tg tg-s" href="sources.html#S13" data-s="13">S13</a></td>
+<td data-b="A.1:36"><span class="cv">crew value</span></td>
+<td data-b="A.1:37"><span class="cv">crew value</span></td>
+<td data-b="A.1:38"><span class="cv">crew value</span></td>
+</tr>
+<tr class="even">
+<td data-b="A.1:39">Jib sheet hole</td>
+<td data-b="A.1:40">Middle hole, flat water <a class="tg tg-s" href="sources.html#S13" data-s="13">S13</a></td>
+<td data-b="A.1:41">Middle hole, flat water <a class="tg tg-s" href="sources.html#S13" data-s="13">S13</a></td>
+<td data-b="A.1:42"><span class="cv">crew value</span></td>
+<td data-b="A.1:43"><span class="cv">crew value</span></td>
+<td data-b="A.1:44"><span class="cv">crew value</span></td>
+</tr>
+<tr class="odd">
+<td data-b="A.1:45">Cunningham</td>
+<td data-b="A.1:46"><span class="cv">crew value</span></td>
+<td data-b="A.1:47"><span class="cv">crew value</span></td>
+<td data-b="A.1:48"><span class="cv">crew value</span></td>
+<td data-b="A.1:49"><span class="cv">crew value</span></td>
+<td data-b="A.1:50"><span class="cv">crew value</span></td>
+</tr>
+<tr class="even">
+<td data-b="A.1:51">Vang</td>
+<td data-b="A.1:52"><span class="cv">crew value</span></td>
+<td data-b="A.1:53"><span class="cv">crew value</span></td>
+<td data-b="A.1:54"><span class="cv">crew value</span></td>
+<td data-b="A.1:55"><span class="cv">crew value</span></td>
+<td data-b="A.1:56"><span class="cv">crew value</span></td>
+</tr>
+<tr class="odd">
+<td data-b="A.1:57">Outhaul</td>
+<td data-b="A.1:58"><span class="cv">crew value</span></td>
+<td data-b="A.1:59"><span class="cv">crew value</span></td>
+<td data-b="A.1:60"><span class="cv">crew value</span></td>
+<td data-b="A.1:61"><span class="cv">crew value</span></td>
+<td data-b="A.1:62"><span class="cv">crew value</span></td>
+</tr>
+<tr class="even">
+<td data-b="A.1:63">Board height</td>
+<td data-b="A.1:64"><span class="cv">crew value</span></td>
+<td data-b="A.1:65"><span class="cv">crew value</span></td>
+<td data-b="A.1:66"><span class="cv">crew value</span></td>
+<td data-b="A.1:67"><span class="cv">crew value</span></td>
+<td data-b="A.1:68"><span class="cv">crew value</span></td>
+</tr>
+</tbody>
+</table>
+<p data-b="A.1:69">The crew fills the matrix only from the recording sheet in A.4. A cell changes when a session row in that wind band, carrying a speed reference, shows the new setting faster than the current one; a setting sailed but not compared stays in the A.4 comment column. Each edit produces a new version, numbered and dated, recording the mast, sail set, foils and combined crew weight it was tested with, since a new mainsail or a change in crew weight invalidates the rows tested with the old ones. Old versions are kept, so that a loss of speed can be traced to the edit that caused it. The <button type="button" class="gl" data-g="A67" aria-label="What this means">band edges</button> are the crew's own: they sit where the log shows the limiting factor changing, from power to righting moment to control, and the class guide's figure of about 12 knots <a class="tg tg-s" href="sources.html#S13" data-s="13">S13</a> is kept as a reference mark beside the crew's edge rather than as the edge itself. A version is valid when either sailor, or the coach, can set the boat from it at the dock without asking a question.</p>
+</section>
+<section class="sec" id="sec-A-2" data-sec="A.2"><h2><span class="secnum">A.2</span><span class="sectitle">Sea-state and wave-mode decision matrix</span></h2><p data-b="A.2:1">The row is chosen from the physics of the water, not from the wind band. <button type="button" class="gl" data-g="A64" aria-label="What this means">Wind waves</button> grow with wind speed, duration and fetch until the sea is fully developed <a class="tg tg-s" href="sources.html#S71" data-s="71">S71</a><a class="tg tg-s" href="sources.html#S72" data-s="72">S72</a>; swell is wave energy that has travelled out of its generating area <a class="tg tg-s" href="sources.html#S71" data-s="71">S71</a> and arrives with a period unrelated to the local wind. In <button type="button" class="gl" data-g="A45" aria-label="What this means">deep water</button> the phase speed is c ≈ 1.56 T metres per second <a class="tg tg-s" href="sources.html#S73" data-s="73">S73</a>, so a long-period wave outruns the boat and is steered as moving terrain, while short chop is met many times a minute and is sailed through. Where the depth falls below half the wavelength the waves slow, <button type="button" class="gl" data-g="A51" aria-label="What this means">shorten and steepen</button> <a class="tg tg-s" href="sources.html#S72" data-s="72">S72</a>, and a wave breaks once its steepness exceeds about 1:7 <a class="tg tg-s" href="sources.html#S74" data-s="74">S74</a>; <button type="button" class="gl" data-g="A66" aria-label="What this means">wind against current</button> raises wave height above normal and wind with current lowers it <a class="tg tg-s" href="sources.html#S76" data-s="76">S76</a>. A leftover sea running at an angle to a new breeze puts one tack into the waves and the other across them, and each tack then needs its own mode <a class="tg tg-s" href="sources.html#S77" data-s="77">S77</a>. Each cell below is a departure from the A.1 column for the wind band; where a cell adds nothing, the A.1 setting stands.</p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th data-b="A.2:2">Sea state</th>
+<th data-b="A.2:3">Upwind mode</th>
+<th data-b="A.2:4">Downwind mode</th>
+<th data-b="A.2:5">Trim priority</th>
+<th data-b="A.2:6">Steering priority</th>
+<th data-b="A.2:7">Crew position</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-b="A.2:8">Flat water</td>
+<td data-b="A.2:9">Height mode; flat, low-drag sails, since a flatter sail has less power and less drag <a class="tg tg-s" href="sources.html#S20" data-s="20">S20</a>; narrow groove, held</td>
+<td data-b="A.2:10">Build apparent wind over the gennaker early <a class="tg tg-s" href="sources.html#S29" data-s="29">S29</a>; high road until pressure lets the boat soak without losing the apparent wind <a class="tg tg-s" href="sources.html#S29" data-s="29">S29</a></td>
+<td data-b="A.2:11">Minimum depth; mainsheet in until the top batten is parallel to the boom <a class="tg tg-s" href="sources.html#S34" data-s="34">S34</a>; jib in the innermost track holes and middle sheet hole below about 12 knots <a class="tg tg-s" href="sources.html#S13" data-s="13">S13</a></td>
+<td data-b="A.2:12">Minimal rudder; leeway small and steady, against the 3 to 5 degrees that most racing boats carry upwind in medium breeze <a class="tg tg-s" href="sources.html#S23" data-s="23">S23</a>; no steering around water that is not there</td>
+<td data-b="A.2:13">Still and together; hull within 5 degrees of flat <a class="tg tg-s" href="sources.html#S36" data-s="36">S36</a>; low trapezing keeps the sail plan upright <a class="tg tg-s" href="sources.html#S25" data-s="25">S25</a></td>
+</tr>
+<tr class="even">
+<td data-b="A.2:14">Chop (short wind waves running with the wind)</td>
+<td data-b="A.2:15">Power mode; depth for power and acceleration <a class="tg tg-s" href="sources.html#S20" data-s="20">S20</a>; a little foot for speed through each set</td>
+<td data-b="A.2:16">Speed before depth <a class="tg tg-s" href="sources.html#S27" data-s="27">S27</a>; windward heel with the windward chine in the water <a class="tg tg-s" href="sources.html#S12" data-s="12">S12</a>; gennaker never under-trimmed</td>
+<td data-b="A.2:17">More depth and more twist so the top of the rig responds to the stronger, wider apparent wind aloft <a class="tg tg-s" href="sources.html#S21" data-s="21">S21</a>; ease to reaccelerate after each check</td>
+<td data-b="A.2:18">Steer through the sets with small angles; keep the foils moving through the water, where they generate lift best <a class="tg tg-s" href="sources.html#S35" data-s="35">S35</a></td>
+<td data-b="A.2:19">Low trapezing to <button type="button" class="gl" data-g="A77" aria-label="What this means">damp roll</button> <a class="tg tg-s" href="sources.html#S25" data-s="25">S25</a>; weight a little aft so <button type="button" class="gl" data-g="A81" aria-label="What this means">the forward V keeps the bow from pounding</button> <a class="tg tg-s" href="sources.html#S14" data-s="14">S14</a></td>
+</tr>
+<tr class="odd">
+<td data-b="A.2:20">Short steep sea (shoaling water or wind against current <a class="tg tg-s" href="sources.html#S72" data-s="72">S72</a><a class="tg tg-s" href="sources.html#S76" data-s="76">S76</a>)</td>
+<td data-b="A.2:21">Full power mode; forgiving trim; the boat kept moving through impacts at the cost of height</td>
+<td data-b="A.2:22">Control mode; gennaker oversheeted to slow the boat when it would plough into the back of a wave <a class="tg tg-s" href="sources.html#S29" data-s="29">S29</a>; vang released well before each bear-away <a class="tg tg-s" href="sources.html#S12" data-s="12">S12</a></td>
+<td data-b="A.2:23">Depth and twist; the gennaker leech held down, because under-trimming lets the leech rotate up <a class="tg tg-s" href="sources.html#S12" data-s="12">S12</a>; sheets eased on impact and trimmed on recovery</td>
+<td data-b="A.2:24">Luff on the face, bear away on the back; the boat never allowed to stop, since stopped foils carry no lift <a class="tg tg-s" href="sources.html#S35" data-s="35">S35</a></td>
+<td data-b="A.2:25">Aft to lift the bow; the forward V and chine absorb the pounding <a class="tg tg-s" href="sources.html#S14" data-s="14">S14</a>; active fore-and-aft with every wave</td>
+</tr>
+<tr class="even">
+<td data-b="A.2:26">Long swell (energy from a distant generating area <a class="tg tg-s" href="sources.html#S71" data-s="71">S71</a>)</td>
+<td data-b="A.2:27">A.1 column unchanged; <span class="lm" data-l="B70">the swell steered as terrain, height on the face, foot on the back<button type="button" class="lmb" data-l="B70" aria-label="Why this works">why</button></span></td>
+<td data-b="A.2:28">Surf mode; soak down the face, heat up on the back to reconnect the apparent wind, which moves forward as speed rises <a class="tg tg-s" href="sources.html#S26" data-s="26">S26</a></td>
+<td data-b="A.2:29">Trim in on the face as the apparent wind goes forward, ease on the back as it goes aft <a class="tg tg-s" href="sources.html#S26" data-s="26">S26</a>; leech twist set with the vang once the mainsheet no longer pulls down <a class="tg tg-s" href="sources.html#S34" data-s="34">S34</a></td>
+<td data-b="A.2:30">Timing to the wave period, which fixes the wave speed by c ≈ 1.56 T <a class="tg tg-s" href="sources.html#S73" data-s="73">S73</a>; the helm steers the wave shape, the compass is secondary</td>
+<td data-b="A.2:31">Fore-and-aft movement matched to the wave phase and bounded by rule 42 <a class="tg tg-s" href="sources.html#S1" data-s="1">S1</a>; aft on the face downwind, forward on the back</td>
+</tr>
+<tr class="odd">
+<td data-b="A.2:32">Waves across the wind on one tack (leftover sea after a shift <a class="tg tg-s" href="sources.html#S77" data-s="77">S77</a>)</td>
+<td data-b="A.2:33">Two modes: the into-wave tack sails power mode, the across-wave tack sails height mode <a class="tg tg-s" href="sources.html#S77" data-s="77">S77</a></td>
+<td data-b="A.2:34">The gybe that runs with the waves is the surfing gybe; the other is a speed gybe sailed as chop</td>
+<td data-b="A.2:35">Trim reset at every tack and gybe; the into-wave tack carries more depth <a class="tg tg-s" href="sources.html#S20" data-s="20">S20</a>, the across-wave tack carries flatter sails</td>
+<td data-b="A.2:36">The into-wave tack steers wave by wave; the across-wave tack steers to the wind and the compass</td>
+<td data-b="A.2:37">Aft and active on the into-wave tack; the A.1 position on the across-wave tack</td>
+</tr>
+</tbody>
+</table>
+<p data-b="A.2:38">The row is selected before the start from the observed wave period, the wave direction relative to the wind on each tack, and whether the sea is still building or is leftover; it is re-selected at the top and bottom of the course when the sea differs between the two ends, as it does with a shoreline, a shoal or a current line at one end. A mode is a package: the upwind and downwind columns are sailed together with the trim, steering and crew-position columns that belong to them, and a change of mode is called by name so that both sailors move at once. The row and any mid-race change are logged on the A.4 sheet against the settings of the day. The testable standard is that an observer following the boat through a tack in a sea that runs across the wind on one tack sees the trim, the steering rhythm and the crew's fore-and-aft position change at the tack, and change back at the next one.</p>
+</section>
+<section class="sec" id="sec-A-4" data-sec="A.4"><h2><span class="secnum">A.4</span><span class="sectitle">Rig-settings recording sheet</span></h2><p data-b="A.4:1">One session produces one row, and the row is the only path by which a number reaches A.1 or a mode choice is confirmed in A.2. The fields are chosen so that the row can be reproduced: the conditions, every setting, the equipment the settings were carried on, the reference the speed was judged against and the result. Settings are written before launching, any change on the water is written with the time and the reason, and the result is written at the debrief from the logger where one was carried. <button type="button" class="gl" data-g="A96" aria-label="What this means">Class rule C.5.2</button> permits timing devices, up to two compasses without functions beyond heading, heading memory and timing, camera and sound recording equipment, and tracking equipment where permitted by the ICA, Notice of Race and Sailing Instructions <a class="tg tg-s" href="sources.html#S3" data-s="3">S3</a>; the Vakaros Atlas 2 logs at 2, 5 or 10 <button type="button" class="gl" data-g="A29" aria-label="What this means">Hz</button> and reports VMG and shift tracking <a class="tg tg-s" href="sources.html#S79" data-s="79">S79</a>, and the Sailmon MAX records boat speed, heading, heel, pitch and position <a class="tg tg-s" href="sources.html#S80" data-s="80">S80</a>. At Paris 2024 voice, radio and data transmissions were prohibited from the first warning signal to the end of the last race of the day <a class="tg tg-s" href="sources.html#S4" data-s="4">S4</a>, so on race days the reference is read after racing, never during it. Where an event publishes tracking, the race row also carries the published per-boat metrics, average speed over ground, <button type="button" class="gl" data-g="A63" aria-label="What this means">leg VMG</button>, number of manoeuvres and <button type="button" class="gl" data-g="A54" aria-label="What this means">cross-track error</button>, the extra distance sailed upwind from the course middle line <a class="tg tg-s" href="sources.html#S78" data-s="78">S78</a><a class="tg tg-s" href="sources.html#S17" data-s="17">S17</a>, so that a race result can be read against the settings of the day in the same units as a tuning result.</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th data-b="A.4:2">Field</th>
+<th data-b="A.4:3">Entry</th>
+<th data-b="A.4:4">Unit or format</th>
+<th data-b="A.4:5">How it is recorded</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-b="A.4:6">Date</td>
+<td data-b="A.4:7"></td>
+<td data-b="A.4:8">dd-mm-yyyy</td>
+<td data-b="A.4:9">One row per session; two sessions in a day are two rows</td>
+</tr>
+<tr class="even">
+<td data-b="A.4:10">Venue and course area</td>
+<td data-b="A.4:11"></td>
+<td data-b="A.4:12">Name and area</td>
+<td data-b="A.4:13">The area matters because sea state and current differ across a venue</td>
+</tr>
+<tr class="odd">
+<td data-b="A.4:14">Session type</td>
+<td data-b="A.4:15"></td>
+<td data-b="A.4:16">Training, tuning, or race with race number</td>
+<td data-b="A.4:17">Race rows carry finishing place in the result field; tuning rows carry gain or loss</td>
+</tr>
+<tr class="even">
+<td data-b="A.4:18">Matrix version</td>
+<td data-b="A.4:19"></td>
+<td data-b="A.4:20">A.1 version number</td>
+<td data-b="A.4:21">The version the boat was set from before launching</td>
+</tr>
+<tr class="odd">
+<td data-b="A.4:22">Wind band</td>
+<td data-b="A.4:23"></td>
+<td data-b="A.4:24">A.1 column name and measured true wind range in knots</td>
+<td data-b="A.4:25">Range from the coach boat instrument with the coach boat lying stopped, not from feel</td>
+</tr>
+<tr class="even">
+<td data-b="A.4:26">Wind character</td>
+<td data-b="A.4:27"></td>
+<td data-b="A.4:28">Oscillating or persistent; gust and lull spread</td>
+<td data-b="A.4:29">From the pre-start compass log and the coach boat</td>
+</tr>
+<tr class="odd">
+<td data-b="A.4:30">Sea state</td>
+<td data-b="A.4:31"></td>
+<td data-b="A.4:32">A.2 row name</td>
+<td data-b="A.4:33">With the reason it was chosen: building, leftover, shoaling, current line</td>
+</tr>
+<tr class="even">
+<td data-b="A.4:34"><button type="button" class="gl" data-g="A45" aria-label="What this means">Wave period</button> and direction</td>
+<td data-b="A.4:35"></td>
+<td data-b="A.4:36">Seconds; into, across or with the wind, by tack</td>
+<td data-b="A.4:37">Period timed against a fixed reference; direction judged on each tack</td>
+</tr>
+<tr class="odd">
+<td data-b="A.4:38">Current</td>
+<td data-b="A.4:39"></td>
+<td data-b="A.4:40">Direction and strength; how it was read</td>
+<td data-b="A.4:41">From fixed references: moored boats, pots, ripple lines, birds <a class="tg tg-s" href="sources.html#S68" data-s="68">S68</a><a class="tg tg-s" href="sources.html#S69" data-s="69">S69</a></td>
+</tr>
+<tr class="even">
+<td data-b="A.4:42">Cap shroud</td>
+<td data-b="A.4:43"></td>
+<td data-b="A.4:44">Gauge reading and gauge identity</td>
+<td data-b="A.4:45">Measured at the dock with the mast stepped and no sails, comparable with the manual's references <a class="tg tg-s" href="sources.html#S12" data-s="12">S12</a></td>
+</tr>
+<tr class="odd">
+<td data-b="A.4:46">Lowers</td>
+<td data-b="A.4:47"></td>
+<td data-b="A.4:48">Gauge reading or turnbuckle count</td>
+<td data-b="A.4:49">Same gauge and same method every time</td>
+</tr>
+<tr class="even">
+<td data-b="A.4:50">Rake</td>
+<td data-b="A.4:51"></td>
+<td data-b="A.4:52"><span class="cv">crew method</span> measurement</td>
+<td data-b="A.4:53">The crew's own method applied identically; the change from the previous row is what matters</td>
+</tr>
+<tr class="odd">
+<td data-b="A.4:54">Prebend</td>
+<td data-b="A.4:55"></td>
+<td data-b="A.4:56">Millimetres</td>
+<td data-b="A.4:57">Measured at the dock before the sails go up, by the same method every time</td>
+</tr>
+<tr class="even">
+<td data-b="A.4:58">Forestay and jib halyard</td>
+<td data-b="A.4:59"></td>
+<td data-b="A.4:60">Gauge reading or mark</td>
+<td data-b="A.4:61">Jib luff tension is set with the rig tension, so both are recorded</td>
+</tr>
+<tr class="odd">
+<td data-b="A.4:62">Jib car</td>
+<td data-b="A.4:63"></td>
+<td data-b="A.4:64">Track pin hole, numbered from inboard</td>
+<td data-b="A.4:65">The innermost holes are the class guide's reference below about 12 knots <a class="tg tg-s" href="sources.html#S13" data-s="13">S13</a></td>
+</tr>
+<tr class="even">
+<td data-b="A.4:66">Jib sheet hole</td>
+<td data-b="A.4:67"></td>
+<td data-b="A.4:68">Clew board hole number</td>
+<td data-b="A.4:69">The middle hole is the class guide's reference below about 12 knots <a class="tg tg-s" href="sources.html#S13" data-s="13">S13</a></td>
+</tr>
+<tr class="odd">
+<td data-b="A.4:70">Cunningham</td>
+<td data-b="A.4:71"></td>
+<td data-b="A.4:72">Mark number, upwind and downwind</td>
+<td data-b="A.4:73">Marks on the control line; any change on the water written with time and reason</td>
+</tr>
+<tr class="even">
+<td data-b="A.4:74">Vang</td>
+<td data-b="A.4:75"></td>
+<td data-b="A.4:76">Mark number, upwind and downwind</td>
+<td data-b="A.4:77">Downwind the vang sets leech twist <a class="tg tg-s" href="sources.html#S34" data-s="34">S34</a>, so the two values differ</td>
+</tr>
+<tr class="odd">
+<td data-b="A.4:78">Outhaul</td>
+<td data-b="A.4:79"></td>
+<td data-b="A.4:80">Mark number</td>
+<td data-b="A.4:81">As above</td>
+</tr>
+<tr class="even">
+<td data-b="A.4:82">Board height</td>
+<td data-b="A.4:83"></td>
+<td data-b="A.4:84">Mark number, upwind and downwind</td>
+<td data-b="A.4:85">As above</td>
+</tr>
+<tr class="odd">
+<td data-b="A.4:86">Gennaker settings</td>
+<td data-b="A.4:87"></td>
+<td data-b="A.4:88">Tack line and sheet reference marks</td>
+<td data-b="A.4:89">Any gennaker setting the crew varies between sessions</td>
+</tr>
+<tr class="even">
+<td data-b="A.4:90">Mast and spars</td>
+<td data-b="A.4:91"></td>
+<td data-b="A.4:92">Identifier</td>
+<td data-b="A.4:93">One set of spars per event under the class rules <a class="tg tg-s" href="sources.html#S3" data-s="3">S3</a></td>
+</tr>
+<tr class="odd">
+<td data-b="A.4:94">Sail set</td>
+<td data-b="A.4:95"></td>
+<td data-b="A.4:96">Mainsail, jib and gennaker identifiers</td>
+<td data-b="A.4:97">One of each per event unless lost or damaged beyond repair <a class="tg tg-s" href="sources.html#S3" data-s="3">S3</a></td>
+</tr>
+<tr class="even">
+<td data-b="A.4:98">Foils</td>
+<td data-b="A.4:99"></td>
+<td data-b="A.4:100">Daggerboard and rudder blade identifiers</td>
+<td data-b="A.4:101">As above</td>
+</tr>
+<tr class="odd">
+<td data-b="A.4:102">Combined crew weight</td>
+<td data-b="A.4:103"></td>
+<td data-b="A.4:104">Kilograms, morning weight</td>
+<td data-b="A.4:105">The righting moment the settings were tested with</td>
+</tr>
+<tr class="even">
+<td data-b="A.4:106">Speed reference</td>
+<td data-b="A.4:107"></td>
+<td data-b="A.4:108">Partner boat, logger VMG, or both; instrument identity</td>
+<td data-b="A.4:109">The reference against which the result is judged</td>
+</tr>
+<tr class="odd">
+<td data-b="A.4:110">Partner</td>
+<td data-b="A.4:111"></td>
+<td data-b="A.4:112">Boat, crew, its matrix version and its settings</td>
+<td data-b="A.4:113">A partner on different settings makes the row a test; a partner on the same settings makes it a calibration</td>
+</tr>
+<tr class="even">
+<td data-b="A.4:114">Test protocol</td>
+<td data-b="A.4:115"></td>
+<td data-b="A.4:116">Lined-up upwind, downwind or both; duration; repeats; which boat was to windward</td>
+<td data-b="A.4:117">Written so the result can be re-read for bias</td>
+</tr>
+<tr class="odd">
+<td data-b="A.4:118">Result</td>
+<td data-b="A.4:119"></td>
+<td data-b="A.4:120">Gain or loss per repeat by leg in the crew's chosen unit; or finishing place and leg positions</td>
+<td data-b="A.4:121">Written at the debrief, from the logger where available, not from memory</td>
+</tr>
+<tr class="even">
+<td data-b="A.4:122">Comment</td>
+<td data-b="A.4:123"></td>
+<td data-b="A.4:124">Free text</td>
+<td data-b="A.4:125">One hypothesis per row, stated so that the next session can test it, and whether the row is a candidate for A.1</td>
+</tr>
+<tr class="odd">
+<td data-b="A.4:126">Recorded by</td>
+<td data-b="A.4:127"></td>
+<td data-b="A.4:128">Initials of helm and crew</td>
+<td data-b="A.4:129">Both sign; a row unsigned by one sailor is not a matrix input</td>
+</tr>
+</tbody>
+</table>
+<p data-b="A.4:130">Three rules keep the sheet honest. A blank cell is a blank, never a guess, and a later reader treats it as unknown. A row without a speed reference cannot change A.1, whatever the crew felt on the water, because feel is the quantity the sheet exists to check. A change made on the water without a time and a reason is written as unknown for that leg. The standard is reproducibility: either sailor, given the row a month later, can set the boat identically and describe the conditions it was tested in, and the coach can tell from the row alone whether the result is a test or a calibration.</p>
+</section>
+<section class="sec" id="sec-A-5" data-sec="A.5"><h2><span class="secnum">A.5</span><span class="sectitle">Equipment inspection and maintenance checklist</span></h2><p data-b="A.5:1">The class rules make damage prevention a scoring matter. Hulls, hull appendages, rigs and sails are manufacture controlled, and a crew is allowed one hull, one set of spars, one daggerboard, one rudder blade and one mainsail, jib and gennaker per event unless lost or damaged beyond repair <a class="tg tg-s" href="sources.html#S3" data-s="3">S3</a>; a failure at an event is therefore a retirement or a request to the jury, and a repaired part is one whose tuning must be re-established. The mast carries a combined crew weight of up to 165 kg from its dual trapeze <a class="tg tg-s" href="sources.html#S9" data-s="9">S9</a>, and that load passes through the trapeze wires, the hounds, the spreaders and the shrouds every time a sailor goes out. Three inspection categories apply. Daily means on every sailing day, before launching and after the rinse, by eye and by hand without tools. Weekly means one session per training week with the mast lowered where needed, the foils out of the boat and the gauge on the wires against the manual's references with the mast stepped and no sails, forestay 40, side stays 28, intermediates 26, backstays 17 <a class="tg tg-s" href="sources.html#S12" data-s="12">S12</a>. Pre-event means a full strip, measure and replace-on-doubt pass completed before the event's equipment inspection, including the hull weighed against the 94.0 kg minimum including wings of class rule C.7.3 <a class="tg tg-s" href="sources.html#S3" data-s="3">S3</a>.</p>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th data-b="A.5:2">Component</th>
+<th data-b="A.5:3">Daily</th>
+<th data-b="A.5:4">Weekly</th>
+<th data-b="A.5:5">Pre-event</th>
+<th data-b="A.5:6">Failure it prevents</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-b="A.5:7">Mast</td>
+<td data-b="A.5:8">Track clear, halyard locks engaging, sheaves turning, spreader roots and hounds fittings by hand</td>
+<td data-b="A.5:9">Joints, rivets, corrosion at fittings, heel and step, mast gate and partners</td>
+<td data-b="A.5:10">Rake and prebend measured and written against the current A.1 version; suspect fittings replaced</td>
+<td data-b="A.5:11">Mast failure under trapeze and gennaker load; a halyard lock slipping in a race; a moved fitting that silently changes the tuning matrix</td>
+</tr>
+<tr class="even">
+<td data-b="A.5:12">Shrouds (cap shrouds and lowers)</td>
+<td data-b="A.5:13">Strands at the terminals, pins and split rings seated, lashings intact, no kinks</td>
+<td data-b="A.5:14">Cap shroud tension on the gauge against the dock reference <a class="tg tg-s" href="sources.html#S12" data-s="12">S12</a>; swages and terminals under magnification</td>
+<td data-b="A.5:15">Any wire with a broken strand or a deformed swage replaced; tension re-set and written</td>
+<td data-b="A.5:16">Dismasting; a slack rig that changes headstay sag and jib depth <a class="tg tg-s" href="sources.html#S33" data-s="33">S33</a></td>
+</tr>
+<tr class="odd">
+<td data-b="A.5:17">Spreaders</td>
+<td data-b="A.5:18">Tips and tape intact, bracket bolts tight, no play at the root</td>
+<td data-b="A.5:19">Angle and symmetry sighted from the masthead; brackets and bolts</td>
+<td data-b="A.5:20">Bolts checked and replaced on doubt; angle written against the current A.1 version</td>
+<td data-b="A.5:21">Side bend and lean <a class="tg tg-s" href="sources.html#S32" data-s="32">S32</a>; a spreader tip tearing the gennaker or mainsail</td>
+</tr>
+<tr class="even">
+<td data-b="A.5:22">Forestay</td>
+<td data-b="A.5:23">Wire, terminal, jib attachment and pin; no kink at the bow fitting</td>
+<td data-b="A.5:24">Tension against the reference of 40 <a class="tg tg-s" href="sources.html#S12" data-s="12">S12</a>; jib halyard and lock</td>
+<td data-b="A.5:25">Replaced on doubt; bow fitting bolts and backing plate checked</td>
+<td data-b="A.5:26">Loss of the rig forward; wrong luff tension and sag on the jib <a class="tg tg-s" href="sources.html#S33" data-s="33">S33</a></td>
+</tr>
+<tr class="odd">
+<td data-b="A.5:27">Trapeze wires</td>
+<td data-b="A.5:28">Strands at the handle and at the hook eye, adjusters holding, shock cord returning, hooks and harness spreader bars</td>
+<td data-b="A.5:29">Full length under tension; adjuster cleats; harness stitching</td>
+<td data-b="A.5:30">Any wire with a broken strand replaced; adjusters and hooks replaced on doubt</td>
+<td data-b="A.5:31">A sailor in the water with the boat capsizing to windward; a hook or adjuster failing mid-tack</td>
+</tr>
+<tr class="even">
+<td data-b="A.5:32">Foils (daggerboard and rudder blade)</td>
+<td data-b="A.5:33">Leading and trailing edges, tips, cracks at the head and root</td>
+<td data-b="A.5:34">Fairness and surface finish; fit in the case and stock; no play</td>
+<td data-b="A.5:35">Repaired and faired; measured against the class rules <a class="tg tg-s" href="sources.html#S3" data-s="3">S3</a></td>
+<td data-b="A.5:36">Loss of lift and helm control; cracks propagating under side force; case damage from a loose fit</td>
+</tr>
+<tr class="odd">
+<td data-b="A.5:37">Rudder fittings</td>
+<td data-b="A.5:38">Gudgeons, pintles, retaining clip, tiller extension joint, rudder downhaul</td>
+<td data-b="A.5:39">Play in the stock and bolts; extension joint wear</td>
+<td data-b="A.5:40">Universal joint and retaining clip replaced on doubt; bolts and backing checked</td>
+<td data-b="A.5:41">Rudder loss; a broken extension in a gybe; play that costs steering precision</td>
+</tr>
+<tr class="even">
+<td data-b="A.5:42">Gennaker system</td>
+<td data-b="A.5:43">Halyard, tack line, sheets, retrieval line and patches, chute mouth, pole tip and bowsprit fittings, launcher bag</td>
+<td data-b="A.5:44">Blocks, halyard sheave, pole track and bearings; sail patches and retrieval points</td>
+<td data-b="A.5:45">Halyard and sheets replaced on chafe; pole and chute fittings checked; sail inspected on the floor</td>
+<td data-b="A.5:46">A hoist or drop failing in a race; the sail tearing on the chute; the halyard parting under load</td>
+</tr>
+<tr class="odd">
+<td data-b="A.5:47">Control lines</td>
+<td data-b="A.5:48">Cunningham, vang, outhaul, jib sheets, mainsheet and board line: chafe, core exposure, knots, cleats holding, shock cord tension</td>
+<td data-b="A.5:49">Purchase blocks and cleat springs; marks still legible</td>
+<td data-b="A.5:50">Lines that have lost their marks or their cover replaced; marks re-set and written on the A.4 sheet</td>
+<td data-b="A.5:51">A control that will not hold in a gust; a mark that no longer matches the recording sheet</td>
+</tr>
+<tr class="even">
+<td data-b="A.5:52">Fasteners</td>
+<td data-b="A.5:53">Split pins, rings and tape on every pin; wing bolts and trampoline lashings by hand</td>
+<td data-b="A.5:54">Every screw and bolt on deck fittings, wings and rack joints; thread lock where fitted</td>
+<td data-b="A.5:55">A full pass with the correct tools; anything corroded replaced; wing joints checked for cracks</td>
+<td data-b="A.5:56">A single lost pin releasing a shroud, a wing or a fitting; a loose wing bolt working a crack into the hull</td>
+</tr>
+</tbody>
+</table>
+<p data-b="A.5:57">The checklist is worked in the same order each time and signed by the sailor who did it; a finding goes into the maintenance log with the date and the action taken. Anything that fails a daily check is put right or replaced before the boat launches. A replacement of a wire, a spreader, a fitting or a foil triggers a rig re-measure, and the A.1 version in use is annotated with the date of the change, because <button type="button" class="gl" data-g="A89" aria-label="What this means">a new wire settles</button> and the tensions the matrix assumes drift with it. The pre-event pass is finished before the equipment inspection so that a part which fails is replaced within the crew's own control rather than under the event's replacement procedure <a class="tg tg-s" href="sources.html#S3" data-s="3">S3</a>. The testable standard is that over a season no failure the checklist covers occurs on the water, and that every replacement is planned from a logged finding rather than forced by a breakage.</p>
+</section><nav class="pager"><a class="pn" href="ch16.html">Previous: 16. Regatta Execution and Campaign Management</a><a class="pn" href="chB.html">Next: B. Racing Reference Tools</a></nav></article>
+</main>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body></html>
