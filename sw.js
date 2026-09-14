@@ -1,7 +1,7 @@
 /* Offline cache for the 49er theory book. The file list and version are
    written in by build_web.py, so a rebuild invalidates the old cache. */
-var VERSION = "14 September 2026-4" 'dev';
-var FILES = ["about.html", "app.css", "app.js", "ch1.html", "ch10.html", "ch11.html", "ch12.html", "ch13.html", "ch14.html", "ch15.html", "ch16.html", "ch2.html", "ch3.html", "ch4.html", "ch5.html", "ch6.html", "ch7.html", "ch8.html", "ch9.html", "chA.html", "chB.html", "chC.html", "data.js", "glossary.html", "icon-180.png", "icon-192.png", "icon-512.png", "index.html", "manifest.webmanifest", "marks.html", "sources.html"] [];
+var VERSION = "14 September 2026-5";
+var FILES = ["about.html", "app.css", "app.js", "ch1.html", "ch10.html", "ch11.html", "ch12.html", "ch13.html", "ch14.html", "ch15.html", "ch16.html", "ch2.html", "ch3.html", "ch4.html", "ch5.html", "ch6.html", "ch7.html", "ch8.html", "ch9.html", "chA.html", "chB.html", "chC.html", "data.js", "glossary.html", "icon-180.png", "icon-192.png", "icon-512.png", "index.html", "manifest.webmanifest", "marks.html", "sources.html"];
 var CACHE = 'k49-' + VERSION;
 
 self.addEventListener('install', function (e) {
