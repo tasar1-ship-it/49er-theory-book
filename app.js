@@ -161,7 +161,8 @@
     var vs = spokenVoices().slice().sort(function (a, b) { return voiceScore(b) - voiceScore(a); });
     if (!vs.length) {
       return '<label>Voice for the walkthrough</label>' +
-        '<p class="meta">No voices have loaded yet. Press Click Me once, then come back here.</p>';
+        '<p class="meta">No voices have loaded yet. Press ' + esc(tourIdle) +
+        ' once, then come back here.</p>';
     }
     var best = pickVoice();
     var opts = '<option value="">Best available (' + esc(best ? best.name : 'default') + ')</option>' +
@@ -1109,11 +1110,17 @@
   }
 
   var tourBtn = document.getElementById('btn-tour');
+  /* whatever the builder wrote on the button is the name of this thing,
+     and it is what goes back when the walkthrough stops */
+  var tourIdle = (function () {
+    var l = tourBtn && tourBtn.querySelector('.tourbtn-l');
+    return l ? l.textContent : '';
+  })();
 
   function setTourBtn(on) {
     if (!tourBtn) return;
     tourBtn.classList.toggle('playing', on);
-    tourBtn.querySelector('.tourbtn-l').textContent = on ? 'Stop' : 'Click Me';
+    tourBtn.querySelector('.tourbtn-l').textContent = on ? 'Stop' : tourIdle;
     tourBtn.querySelector('.tourbtn-i').innerHTML = on ? '&#9632;' : '&#9654;';
   }
 
@@ -1185,7 +1192,18 @@
   var api = window.__bookSheet;
   var btn = document.getElementById('btn-jump');
   var secs = [].slice.call(document.querySelectorAll('section.sec[data-sec]'));
-  if (!api || !btn || !secs.length) return;
+  if (!api || !btn || !secs.length) {
+    /* nothing to jump to on this page, so the title is not a control and
+       must not wear a caret that says it is */
+    if (btn) {
+      var c = btn.querySelector('.caret');
+      if (c && c.parentNode) c.parentNode.removeChild(c);
+      btn.style.cursor = 'default';
+      btn.setAttribute('aria-disabled', 'true');
+      btn.removeAttribute('aria-label');
+    }
+    return;
+  }
 
   var nowEl = btn.querySelector('.now');
   var chapterTitle = btn.getAttribute('data-chapter') || '';

@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="49er Theory">
+<meta name="theme-color" content="#0A1F4C">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="stylesheet" href="app.css">
+<title>How to use this book</title>
+<script>
+/* set text size and background before first paint so there is no flash */
+try {
+  var p = JSON.parse(localStorage.getItem('k49.prefs.v1') || '{}');
+  var s = ['17px','20px','23px','26px'][p.size == null ? 1 : p.size];
+  document.documentElement.style.setProperty('--fs', s);
+  var sysDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  var th = p.theme || (sysDark ? 'dark' : 'light');
+  document.addEventListener('DOMContentLoaded', function () {
+    document.body.classList.add('t-' + th);
+  });
+} catch (e) {}
+</script>
+
+</head>
+<body class="reading" data-page="howto">
+<header class="bar">
+  <a class="bar-b" href="./" aria-label="Contents">Contents</a>
+  <button class="bar-b bar-t" id="btn-jump" data-chapter="How to use this book"
+          aria-label="Jump to a section"><span class="where">How to use this book</span><span class="now"></span><span class="caret">▾</span></button>
+  <div class="bar-r">
+    <button class="bar-b" id="btn-marks" aria-label="My marks">Marks</button>
+    <button class="bar-b" id="btn-mode" aria-label="Switch between bright and dark">Dark</button>
+    <button class="bar-b" id="btn-read" aria-label="Reading settings">Aa</button>
+  </div>
+</header>
+<main class="wrap">
+<h1>How to use this book</h1>
+<p class="sub">Everything the book can do, in the order you are likely to need
+it. Five minutes to read, and you do not have to remember any of it, because
+every control says what it is when you tap it.</p>
+
+<h2>Put it on your home screen first</h2>
+<p>Do this once and you never think about it again.</p>
+<ol>
+<li>Open the book on your iPad in Safari. The address is
+<code>tasar1-ship-it.github.io/49er-theory-book/</code> and you should see the
+dark blue cover with a gold Start button.</li>
+<li>Tap the Share button, the square with an arrow coming out of the top,
+scroll down the list, and tap Add to Home Screen, then Add. A book icon appears
+on your home screen.</li>
+<li>From now on open the book from that icon rather than from a Safari
+tab.</li>
+</ol>
+<p><b>This matters more than it sounds.</b> A page left in a Safari tab can
+have its saved highlights wiped by the iPad after a few weeks of not being
+opened. A book opened from its own icon does not. It also means the whole book
+works with no signal at all, so you can read it in the boat park.</p>
+
+<h2>Moving around</h2>
+<p><b>Contents</b>, top left, is the list of all nineteen chapters.</p>
+<p><b>The chapter title in the middle of the top bar is a button.</b> Tap it and
+the list of that chapter's sections slides up with the one you are reading
+marked. Tap any section to go straight there. The same panel carries the
+previous and next chapter at the bottom, so you can move on without scrolling
+to the end of the chapter first.</p>
+<p><b>The thin gold line across the very top</b> shows how far through the
+chapter you are, so the length of what is left is visible rather than guessed.
+The number beside the chapter title is the section you are in at that moment,
+and it changes as you scroll.</p>
+
+<h2>Making it comfortable to read</h2>
+<p><b>Aa</b>, top right, opens the reading settings. Text size has four steps;
+use the largest on the water. Background has three: Bright for daylight, Sepia
+which is easier on the eyes for a long sitting, and Dark for night. The third
+setting picks the voice used by the spoken walkthrough.</p>
+<p><b>Dark</b>, beside Aa, switches between bright and dark in one tap without
+opening anything. All of this applies to your iPad only and changes nothing for
+anyone else.</p>
+<p>At the top of the contents page there is a gold button with a play
+triangle on it, reading <i>Listen to how this works</i>. It reads a short
+walkthrough of the
+book aloud, and tapping it again stops it.</p>
+
+<h2>When you do not understand something</h2>
+<p><b>Phrases with a dotted underline are explained.</b> Tap one and a panel
+opens saying what it means in plain terms, what it does on the boat, and where
+the idea runs out. There are more than a hundred of them, including one for each
+control: the cunningham, the outhaul, the vang, mast bend, rake, rig tension,
+the halyards, and what moves the centre of effort.</p>
+<p>Each panel carries two more buttons. <b>Still not clear</b> sends a request
+for a better explanation of that exact term into your marks list. <b>All
+terms</b> opens the glossary, which is every explained phrase in one place.</p>
+<p><b>Tags such as <a class="tg tg-s" href="sources.html#S12" data-s="12">S12</a> are sources.</b> Tap one and it shows the book or
+document it came from and links to it, so you can check anything you doubt.
+Nothing here carries a tag unless the source really says it.</p>
+<p><b>Where the book says <span class="cv">crew value</span></b>, that is a number nobody has
+published for this boat. It is yours and Antonio's to measure and write in. It
+is deliberately blank rather than guessed.</p>
+
+<h2>Marking as you read</h2>
+<p>Select any words with your finger and a small dark bar appears with four
+coloured circles and three words.</p>
+<p>The four circles are four kinds of highlight. <b>Yellow</b> means important,
+remember this. <b>Blue</b> means I do not understand this yet. <b>Green</b>
+means agreed, this matches what we already do. <b>Red</b> means I disagree, or
+this is wrong for our boat.</p>
+<p>One tap on a circle and the passage is marked in that colour. That is the
+whole thing. The colour travels with the mark all the way into what is sent on,
+so a blue passage and a red one get answered differently.</p>
+<p>Beside the circles, <b>Note</b> saves a highlight with something written on
+it for yourself, <b>Ask</b> sends a request for more on that passage and offers
+a list of what kind of more, and <b>Copy</b> copies the passage.</p>
+<p><b>Tap any highlight you have already made</b> to open it. From there you can
+change its colour, edit the note, delete it, or email the request. At the foot
+of every chapter there is a request button for the chapter as a whole rather
+than for one passage.</p>
+
+<h2>Your marks list</h2>
+<p><b>Marks</b>, top right, is everything you have marked, grouped by chapter,
+with the key to the four colours at the top and a grey box telling you whether
+your marks are safe.</p>
+<p>The button reading <b>Everything</b> is a filter. Change it to see only
+highlights, only notes, only requests, or only one of the four colours. Filter
+to blue and you have a list of everything you did not follow, which is the most
+useful list in the book. Every mark has <i>Open in the book</i>, which takes you
+back to the exact passage, and <i>Delete</i>.</p>
+
+<h2>Keeping your marks safe</h2>
+<p>Your highlights live on your iPad and nowhere else. If it is lost or wiped
+they are gone, unless you have made a copy. The grey box at the top of the
+Marks page tells you which of those two you are in, every time you look.</p>
+<ol>
+<li>Tap Marks, then Back up. The share sheet opens.</li>
+<li>Tap Save to Files, choose iCloud Drive, and save. The grey box then reads
+"Backed up today. Nothing new since."</li>
+</ol>
+<p>Do it again whenever the grey box says there are marks since the last
+backup. Once a session is plenty.</p>
+<p>If you ever lose everything, tap <b>Restore</b>. It takes the backup file, or
+the text of any marks email you have sent, and puts them back. Restoring only
+ever adds, so it can never overwrite something newer you have written. The one
+consequence is that a mark you deleted after a backup will come back, which is
+the right way round for a safety net.</p>
+<p><b>Never clear website data or history for this site to fix a problem.</b>
+That is the one action that deletes your highlights for good. When the book has
+been updated and you cannot see the change, close it completely instead: swipe
+up from the bottom of the screen and swipe the book away, then open it again
+from the icon.</p>
+
+<h2>Sending your marks on</h2>
+<p><b>Email to Ronald</b> on the Marks page writes the whole list into an email,
+already addressed, and opens your mail app. You tap send. Nothing leaves the
+iPad until you do. <b>Export</b> saves the same list as a file, and <b>Copy
+all</b> puts it on the clipboard to paste into a message instead. Whichever you
+use, the colours and the requests come through, so a blue highlight arrives as
+"did not understand this" rather than as a highlighted sentence.</p>
+
+<h2>The small print, which is short</h2>
+<p>Everything you mark stays on your own iPad. Nothing is sent anywhere until
+you press a button that says it will send. There is no account and no login.</p>
+<p>You and Antonio never see each other's marks. There is no shared list. It is
+not that they are hidden from each other: they are on different iPads and there
+is nothing joining them.</p>
+
+<h2>What is here, and what is not yet</h2>
+<p>All nineteen chapters carry the explanation panels, the section jump, the
+glossary and the sources. Only chapter 3 has figures so far; the rest are text,
+and the figures are being drawn chapter by chapter once chapter 3 has been
+judged.</p>
+<p>Five sections are waiting on voice notes that have not arrived: 6.1, 8.6,
+13.6.1, C.2 and C.3. They are written as they stood and will be revised when
+the notes come in.</p>
+
+</main>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body></html>
