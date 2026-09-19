@@ -424,3 +424,140 @@ mark.hl.is-request { background: none; border-bottom: 2px dashed var(--navy-2); 
 @media print {
   .bar, .seltool, .scrim, .askbtn, .pager, .secnav { display: none !important; }
 }
+/* ------------------------------------------------ figures, photos and hooks
+   Added for build 9, after Conrad's note that the book needed to be more
+   visual and that it reads heavy over a long session. These rules only add;
+   nothing above them is changed. */
+
+.fig {
+  margin: 1.9em calc(-1 * var(--fig-bleed, 0px)) 1.6em;
+  padding: 0;
+}
+.fig svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  background: #F6F4EF;
+}
+.fig img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+.fig figcaption {
+  margin: .7em 2px 0;
+  font-size: .855em;
+  line-height: 1.48;
+  color: var(--ink-3);
+  letter-spacing: .002em;
+}
+.fig figcaption b { color: var(--ink-2); font-weight: 650; }
+
+/* A photograph that has not been taken yet. It says exactly what the shot is,
+   so the slot is an instruction rather than a hole. */
+.photoslot .slot {
+  border: 1px dashed var(--rule-2);
+  border-radius: 10px;
+  padding: 16px 16px 15px;
+  background: color-mix(in srgb, var(--brass) 5%, transparent);
+}
+@supports not (background: color-mix(in srgb, red 5%, transparent)) {
+  .photoslot .slot { background: rgba(160, 120, 40, .045); }
+}
+.slot-k {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: .66em; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--brass); margin-bottom: 7px;
+}
+.slot-t { font-weight: 650; color: var(--ink); margin-bottom: 5px; }
+.slot-s { font-size: .885em; line-height: 1.5; color: var(--ink-2); }
+.slot-f { font-size: .8em; line-height: 1.5; color: var(--ink-3); margin-top: 9px; }
+.slot-f code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: .92em; background: var(--rule); padding: 1px 5px; border-radius: 4px;
+}
+
+/* The hook: the moment on the water that the section explains. It is the
+   change of pace, so it is set differently from the body and given air. */
+.hook {
+  margin: .2em 0 1.5em;
+  padding: 0 0 0 16px;
+  border-left: 2.5px solid var(--brass);
+  font-size: 1.035em;
+  line-height: 1.58;
+  color: var(--ink-2);
+  font-style: italic;
+  letter-spacing: -.003em;
+}
+.hook::first-letter { font-style: normal; }
+
+@media (min-width: 760px) {
+  .fig { --fig-bleed: 34px; }
+}
+@media print {
+  .fig { break-inside: avoid; }
+  .photoslot { display: none; }
+}
+/* ------------------------------------------------------- moving about
+   Added for build 10, after Conrad asked for it to be easier to go back and
+   forth. A chapter page is around 29,000 pixels tall; before this the only
+   section list was collapsed at the very top and the chapter links were at the
+   very bottom, so getting from 3.7 back to 3.2 meant scrolling the whole way.
+   These rules only add; nothing above them is changed. */
+
+/* the chapter title in the sticky bar becomes the way in */
+button.bar-t {
+  appearance: none; border: 0; background: none; font: inherit;
+  cursor: pointer; padding: 6px 10px; border-radius: 999px;
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+}
+button.bar-t:active { background: var(--bg-3); }
+.bar-t .where {
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.bar-t .caret { flex: none; opacity: .5; font-size: .9em; }
+.bar-t .now { color: var(--brass); font-variant-numeric: tabular-nums; }
+
+/* the sheet it opens */
+.jump h3 { margin: 0 0 12px; }
+.jump-l { list-style: none; margin: 0; padding: 0; }
+.jump-l li { margin: 0; }
+.jump-l a {
+  display: flex; gap: .85em; align-items: baseline; text-decoration: none;
+  color: var(--ink); padding: 11px 10px; border-radius: 9px; line-height: 1.35;
+}
+.jump-l a:active { background: var(--bg-3); }
+.jump-l a.on { background: color-mix(in srgb, var(--brass) 12%, transparent); }
+@supports not (background: color-mix(in srgb, red 12%, transparent)) {
+  .jump-l a.on { background: rgba(160, 120, 40, .12); }
+}
+.jump-l .n {
+  flex: none; min-width: 2.6em; color: var(--brass); font-weight: 650;
+  font-variant-numeric: tabular-nums; font-size: .92em;
+}
+.jump-rule {
+  margin: 12px 0; border: 0; border-top: 1px solid var(--rule);
+}
+.jump-x { display: flex; gap: 8px; }
+.jump-x a {
+  flex: 1; text-align: center; text-decoration: none; color: var(--navy);
+  border: 1px solid var(--rule-2); background: var(--bg-2); border-radius: 9px;
+  padding: 11px 10px; font-size: .9em; font-weight: 600;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.jump-x a:active { background: var(--bg-3); }
+.jump-x a.none { opacity: .38; pointer-events: none; }
+
+/* a thin line across the top of the bar showing how far through the chapter
+   the reader is, so the length of what is left is visible rather than guessed */
+.prog {
+  position: fixed; left: 0; top: 0; height: 2px; z-index: 50;
+  background: var(--brass); width: 0;
+  transition: width .08s linear;
+}
+
+@media print {
+  .prog { display: none; }
+}

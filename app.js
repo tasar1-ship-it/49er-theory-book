@@ -76,6 +76,10 @@
     sheet.scrollTop = 0;
   }
   function closeSheet() { scrim.classList.remove('on'); sheet.innerHTML = ''; }
+
+  // handed out so the navigation module, which lives outside this closure,
+  // can reuse the same sheet rather than building a second one
+  window.__bookSheet = { open: openSheet, close: closeSheet, el: sheet };
   function esc(s) {
     return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
@@ -928,4 +932,96 @@
       navigator.serviceWorker.register('sw.js').catch(function () { /* offline is optional */ });
     });
   }
+})();
+
+
+/* ------------------------------------------------------------------ moving about
+   Build 10. Conrad asked for it to be easier to go back and forth. A chapter
+   runs to about 29,000 pixels and the only section list was collapsed at the
+   very top, so this puts the list behind the chapter title in the sticky bar,
+   keeps that title showing which section is under the reader, and draws a
+   progress line. It reads the sections and the chapter links out of the page
+   that is already built, so the builder did not have to learn anything new. */
+(function () {
+  var api = window.__bookSheet;
+  var btn = document.getElementById('btn-jump');
+  var secs = [].slice.call(document.querySelectorAll('section.sec[data-sec]'));
+  if (!api || !btn || !secs.length) return;
+
+  var nowEl = btn.querySelector('.now');
+  var chapterTitle = btn.getAttribute('data-chapter') || '';
+  var current = null;
+
+  function titleOf(s) {
+    var t = s.querySelector('h2 .sectitle');
+    return t ? t.textContent.trim() : (s.getAttribute('data-sec') || '');
+  }
+
+  var prog = document.createElement('div');
+  prog.className = 'prog';
+  document.body.appendChild(prog);
+
+  function onScroll() {
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    prog.style.width = (h > 0 ? Math.min(100, (window.scrollY / h) * 100) : 0) + '%';
+    var y = window.scrollY + 90, found = null;
+    for (var i = 0; i < secs.length; i++) {
+      if (secs[i].getBoundingClientRect().top + window.scrollY <= y) found = secs[i];
+    }
+    if (found !== current) {
+      current = found;
+      if (nowEl) nowEl.textContent = current ? current.getAttribute('data-sec') : '';
+    }
+  }
+  var ticking = false;
+  window.addEventListener('scroll', function () {
+    if (ticking) return;
+    ticking = true;
+    window.requestAnimationFrame(function () { onScroll(); ticking = false; });
+  }, { passive: true });
+  onScroll();
+
+  function pagerHtml() {
+    var links = [].slice.call(document.querySelectorAll('.pager a'));
+    var prev = null, next = null;
+    links.forEach(function (a) {
+      if (/^Previous/i.test(a.textContent)) prev = a;
+      else if (/^Next/i.test(a.textContent)) next = a;
+    });
+    function one(a, label) {
+      if (!a) return '<a class="none">' + label + '</a>';
+      return '<a href="' + a.getAttribute('href') + '">' +
+             a.textContent.replace(/^(Previous|Next):\s*/i, label + ' ') + '</a>';
+    }
+    return '<div class="jump-x">' + one(prev, '←') + one(next, '→') + '</div>';
+  }
+
+  /* bound once, not once per opening, or the handlers stack up every time the
+     reader opens the list and the page jumps several times on one tap */
+  api.el.addEventListener('click', function (e) {
+    var a = e.target && e.target.closest ? e.target.closest('.jump a[href^="#"]') : null;
+    if (!a) return;
+    e.preventDefault();
+    var id = a.getAttribute('href').slice(1);
+    api.close();
+    if (id === 'top') { window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+    var t = document.getElementById(id);
+    if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  btn.addEventListener('click', function () {
+    var rows = secs.map(function (s) {
+      var on = (s === current) ? ' class="on"' : '';
+      return '<li><a href="#' + s.id + '"' + on + '><span class="n">' +
+             s.getAttribute('data-sec') + '</span><span>' + titleOf(s) +
+             '</span></a></li>';
+    }).join('');
+    api.open(
+      '<div class="jump"><h3>' + chapterTitle + '</h3>' +
+      '<ol class="jump-l">' + rows + '</ol>' +
+      '<hr class="jump-rule">' + pagerHtml() +
+      '<div class="jump-x" style="margin-top:8px">' +
+      '<a href="./">All chapters</a><a href="#top">Top of chapter</a>' +
+      '</div></div>');
+  });
 })();
