@@ -28,12 +28,48 @@
     catch (e) { toast('Could not save on this device'); return false; }
   }
   var marks = readJSON(MK, []);
+
+  /* Best-effort storage can be evicted when a site has not been opened for
+     a while. Persistent mode is not evicted. Safari decides, and opening
+     the book from the home-screen icon rather than a Safari tab is what
+     makes it say yes, so the answer is recorded and shown to the reader
+     rather than assumed. */
+  var persisted = null;
+  if (navigator.storage && navigator.storage.persist) {
+    (navigator.storage.persisted ? navigator.storage.persisted()
+       : Promise.resolve(false))
+      .then(function (already) {
+        return already ? true : navigator.storage.persist();
+      })
+      .then(function (ok) {
+        persisted = !!ok;
+        if (document.body.dataset.page === 'marks') renderMarksPage();
+      })
+      .catch(function () { persisted = false; });
+  }
   var prefs = readJSON(PF, {});
   if (prefs.size == null) prefs.size = 1;
   if (!prefs.theme) {
     // follow the iPad's own appearance until the reader chooses otherwise
     prefs.theme = (window.matchMedia &&
       window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+  }
+
+  /* The four highlight colours and what each one is for. One list, used by
+     the selection tool, the mark sheet, the marks page and the export, so a
+     colour cannot mean one thing on the page and another in the email. */
+  var KINDS = [
+    { k: 'yellow', label: 'Important' },
+    { k: 'blue',   label: 'Do not understand' },
+    { k: 'green',  label: 'Agreed' },
+    { k: 'red',    label: 'Disagree' }
+  ];
+  function kindLabel(k) {
+    for (var i = 0; i < KINDS.length; i++) if (KINDS[i].k === k) return KINDS[i].label;
+    return '';
+  }
+  function dotHTML(k) {
+    return '<span class="mk-dot"' + (k ? ' data-k="' + esc(k) + '"' : '') + '></span>';
   }
 
   function saveMarks() { writeJSON(MK, marks); }
@@ -327,6 +363,7 @@
       var m = document.createElement('mark');
       m.className = attrs.cls;
       m.dataset.id = attrs.id;
+      if (attrs.k) m.dataset.k = attrs.k;
       node.parentNode.insertBefore(m, node);
       m.appendChild(node);
     });
@@ -345,7 +382,7 @@
       s = i; e = i + mk.raw.length;
     }
     var cls = 'hl' + (mk.note ? ' has-note' : '') + (mk.type === 'request' ? ' is-request' : '');
-    return wrapRange(el, s, e, { cls: cls, id: mk.id });
+    return wrapRange(el, s, e, { cls: cls, id: mk.id, k: mk.k || '' });
   }
 
   function cssq(s) { return String(s).replace(/"/g, '\\"'); }
@@ -374,10 +411,14 @@
   // ------------------------------------------------------ selection tool
   var tool = document.createElement('div');
   tool.className = 'seltool';
-  tool.innerHTML = '<button data-a="highlight">Highlight</button>' +
-                   '<button data-a="note">Note</button>' +
-                   '<button data-a="request">Ask</button>' +
-                   '<button data-a="copy">Copy</button>';
+  tool.innerHTML = '<span class="dots">' +
+    KINDS.map(function (x) {
+      return '<button class="dot" data-k="' + x.k + '" aria-label="' +
+             x.label + '"></button>';
+    }).join('') + '</span>' +
+    '<button data-a="note">Note</button>' +
+    '<button data-a="request">Ask</button>' +
+    '<button data-a="copy">Copy</button>';
   document.body.appendChild(tool);
 
   var pending = null;
@@ -433,8 +474,8 @@
     if (a === 'copy') {
       copy(p.quote); hideTool(); window.getSelection().removeAllRanges(); return;
     }
-    if (a === 'highlight') {
-      addMark(p, 'highlight', '', '');
+    if (b.dataset.k) {
+      addMark(p, 'highlight', '', '', b.dataset.k);
       hideTool(); window.getSelection().removeAllRanges(); return;
     }
     hideTool();
@@ -442,16 +483,18 @@
     composeSheet(p, a);
   });
 
-  function addMark(p, type, note, need) {
+  function addMark(p, type, note, need, k) {
     var mk = {
       id: uid(), ch: chNum, key: chKey, sec: p.sec, block: p.block,
       start: p.start, end: p.end, raw: p.raw, quote: p.quote,
-      type: type, note: note || '', need: need || '', ts: Date.now()
+      type: type, note: note || '', need: need || '', k: k || '',
+      ts: Date.now()
     };
     marks.push(mk);
     saveMarks();
     renderAll();
-    toast(type === 'request' ? 'Request saved' : type === 'note' ? 'Note saved' : 'Highlighted');
+    toast(type === 'request' ? 'Request saved' : type === 'note' ? 'Note saved'
+          : (kindLabel(k) || 'Highlighted'));
     return mk;
   }
 
@@ -518,8 +561,13 @@
     var mk = marks.filter(function (m) { return m.id === id; })[0];
     if (!mk) return;
     openSheet(
-      '<h3>' + (mk.type === 'request' ? 'Your request' : mk.note ? 'Your note' : 'Highlight') + '</h3>' +
+      '<h3>' + (mk.type === 'request' ? 'Your request' : mk.note ? 'Your note'
+        : (kindLabel(mk.k) || 'Highlight')) + '</h3>' +
       '<p class="meta">Section ' + esc(mk.sec) + (mk.need ? ' &middot; ' + esc(mk.need) : '') + '</p>' +
+      '<div class="kpick">' + KINDS.map(function (x) {
+        return '<button data-k="' + x.k + '" aria-label="' + x.label +
+               '" aria-pressed="' + (mk.k === x.k) + '"></button>';
+      }).join('') + '</div>' +
       '<div class="quote">' + esc(mk.quote) + '</div>' +
       (mk.note ? '<p>' + esc(mk.note) + '</p>' : '') +
       '<div class="row">' +
@@ -527,6 +575,17 @@
       '<button class="btn" id="ms-edit">' + (mk.type === 'request' ? 'Edit request' : 'Edit note') + '</button>' +
       (mk.type === 'request' ? '<button class="btn" id="ms-mail">Email it</button>' : '') +
       '<button class="btn btn-p" data-close="1">Close</button></div>');
+    var kp = sheet.querySelector('.kpick');
+    if (kp) kp.addEventListener('click', function (e) {
+      var b = e.target.closest('button'); if (!b) return;
+      mk.k = (mk.k === b.dataset.k) ? '' : b.dataset.k;
+      Array.prototype.forEach.call(kp.querySelectorAll('button'), function (x) {
+        x.setAttribute('aria-pressed', String(x.dataset.k === mk.k));
+      });
+      saveMarks(); renderAll();
+      if (document.body.dataset.page === 'marks') renderMarksPage();
+      toast(kindLabel(mk.k) || 'Colour removed');
+    });
     sheet.querySelector('#ms-del').addEventListener('click', function () { removeMark(id); closeSheet(); });
     var msm = sheet.querySelector('#ms-mail');
     if (msm) msm.addEventListener('click', function () { closeSheet(); emailRequest(mk); });
@@ -621,7 +680,11 @@
     var list = document.getElementById('mk-list');
     if (!list) return;
     var f = (document.getElementById('mk-filter') || {}).value || 'all';
-    var rows = order().filter(function (m) { return f === 'all' || m.type === f; });
+    var rows = order().filter(function (m) {
+      if (f === 'all') return true;
+      if (f.slice(0, 2) === 'k:') return (m.k || '') === f.slice(2);
+      return m.type === f;
+    });
     if (!rows.length) {
       list.innerHTML = '<p class="empty">Nothing marked yet. Select any passage while ' +
         'reading to highlight it, add a note, or ask for more detail.</p>';
@@ -639,7 +702,8 @@
         '<div class="mk" data-id="' + esc(m.id) + '">' +
         '<div class="mk-h"><span class="mk-s">' + esc(label) + '</span>' +
         '<span class="mk-c">' + esc(secTitle(m.ch, m.sec)) + '</span>' +
-        '<span class="mk-k ' + kind + '">' + esc(m.need || kind) + '</span></div>' +
+        '<span class="mk-k ' + kind + '">' + dotHTML(m.k) +
+          esc(m.need || kindLabel(m.k) || kind) + '</span></div>' +
         (m.quote ? '<div class="mk-q">' + esc(m.quote) + '</div>' : '') +
         (m.note ? '<p class="mk-n"><b>' +
           (m.type === 'request' ? 'Asked' : 'Note') + ':</b> ' + esc(m.note) + '</p>' : '') +
@@ -650,7 +714,159 @@
         '<button data-del="' + esc(m.id) + '">Delete</button>' +
         '</div></div>');
     });
-    list.innerHTML = out.join('');
+    var st = document.getElementById('mk-state');
+    if (st) st.innerHTML = backupState();
+    list.innerHTML = '<div class="mk-key">' + KINDS.map(function (x) {
+      return '<span>' + dotHTML(x.k) + esc(x.label) + '</span>';
+    }).join('') + '</div>' + out.join('');
+  }
+
+  /* ----------------------------------------------------------- backup
+     One envelope, versioned, so a file written today can still be read
+     after the marks themselves gain a field. */
+  var BACKUP_KIND = '49er theory book marks';
+
+  function backupJSON() {
+    return JSON.stringify({
+      kind: BACKUP_KIND, v: 1, build: D.BUILD || '',
+      saved: new Date().toISOString(), count: marks.length, marks: marks
+    }, null, 1);
+  }
+
+  /* Union by id, and where the same mark exists on both sides the newer
+     one wins. Nothing is dropped: a restore can only add. */
+  function mergeMarks(incoming) {
+    if (!incoming || !incoming.length) return { added: 0, updated: 0, kept: marks.length };
+    var byId = {}, added = 0, updated = 0;
+    marks.forEach(function (m) { byId[m.id] = m; });
+    incoming.forEach(function (m) {
+      if (!m || !m.id) return;
+      var have = byId[m.id];
+      if (!have) { byId[m.id] = m; added++; }
+      else if ((m.ts || 0) > (have.ts || 0)) { byId[m.id] = m; updated++; }
+    });
+    marks = Object.keys(byId).map(function (k) { return byId[k]; });
+    saveMarks();
+    return { added: added, updated: updated, kept: marks.length };
+  }
+
+  /* Accepts a backup file, a bare array, or the whole text of an export
+     email, which carries its machine-readable copy on the last line. That
+     last case is what makes every export already sent recoverable. */
+  function marksFromText(text) {
+    var t = String(text || '').trim();
+    if (!t) return null;
+    var tries = [t];
+    var i = t.lastIndexOf('[');
+    if (i > 0) tries.push(t.slice(i));
+    var j = t.indexOf('{');
+    if (j > 0) tries.push(t.slice(j));
+    for (var n = 0; n < tries.length; n++) {
+      try {
+        var o = JSON.parse(tries[n]);
+        if (Array.isArray(o)) return o;
+        if (o && Array.isArray(o.marks)) return o.marks;
+      } catch (e) { /* try the next shape */ }
+    }
+    return null;
+  }
+
+  /* The existing Export already reaches iCloud Drive through the share
+     sheet, so backing up uses the same road rather than a second one. */
+  function shareFile(name, text, mime, done) {
+    if (navigator.share) {
+      var payload = { title: name, text: text };
+      if (navigator.canShare && window.File) {
+        try {
+          var file = new File([text], name, { type: mime });
+          if (navigator.canShare({ files: [file] })) payload = { files: [file], title: name };
+        } catch (e) { /* fall through to text share */ }
+      }
+      navigator.share(payload).then(function () { if (done) done(); },
+                                    function () { copy(text); });
+      return;
+    }
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([text], { type: mime }));
+    a.download = name;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
+    if (done) done();
+  }
+
+  function noteBackup() {
+    prefs.backup = { ts: Date.now(), n: marks.length };
+    writeJSON(PF, prefs);
+    if (document.body.dataset.page === 'marks') renderMarksPage();
+  }
+
+  function backupState() {
+    var b = prefs.backup, out = [];
+    var newest = 0;
+    marks.forEach(function (m) { if ((m.ts || 0) > newest) newest = m.ts || 0; });
+    var since = marks.filter(function (m) {
+      return !b || (m.ts || 0) > b.ts;
+    }).length;
+    if (!marks.length) {
+      out.push('Nothing marked yet.');
+    } else if (!b) {
+      out.push('<b>These ' + marks.length + ' marks exist only on this iPad.</b> ' +
+               'Tap Back up and save the file to iCloud Drive.');
+    } else if (since) {
+      out.push('<b>' + since + ' mark' + (since === 1 ? '' : 's') +
+               ' since the last backup</b>, which was ' + when(b.ts) + '.');
+    } else {
+      out.push('Backed up ' + when(b.ts) + '. Nothing new since.');
+    }
+    if (persisted === false) {
+      out.push('<span class="warn">This iPad has not given the book ' +
+               'permanent storage. Open it from the home-screen icon rather ' +
+               'than a Safari tab, and back up.</span>');
+    }
+    return out.join(' ');
+  }
+
+  function when(ts) {
+    var d = new Date(ts), now = Date.now();
+    var days = Math.floor((now - ts) / 86400000);
+    if (days <= 0) return 'today';
+    if (days === 1) return 'yesterday';
+    if (days < 14) return days + ' days ago';
+    return 'on ' + d.toLocaleDateString('en-GB',
+      { day: 'numeric', month: 'long', year: 'numeric' });
+  }
+
+  function restoreSheet() {
+    openSheet(
+      '<h3>Put marks back</h3>' +
+      '<p class="meta">Restoring only adds. Nothing already on this iPad is ' +
+      'removed or overwritten by an older copy, so a mark deleted after the ' +
+      'backup was taken will come back.</p>' +
+      '<div class="row"><button class="btn btn-p" id="rs-file">' +
+      'Choose a backup file</button></div>' +
+      '<label>Or paste the text of an export email</label>' +
+      '<textarea id="rs-t" placeholder="Paste the whole email, including the ' +
+      'machine-readable line at the bottom"></textarea>' +
+      '<div class="row"><button class="btn" data-close="1">Cancel</button>' +
+      '<button class="btn btn-p" id="rs-ok">Put them back</button></div>');
+    sheet.querySelector('#rs-file').addEventListener('click', function () {
+      var fi = document.getElementById('mk-file');
+      closeSheet();
+      if (fi) fi.click();
+    });
+    sheet.querySelector('#rs-ok').addEventListener('click', function () {
+      applyRestore(sheet.querySelector('#rs-t').value);
+    });
+  }
+
+  function applyRestore(text) {
+    var incoming = marksFromText(text);
+    if (!incoming) { toast('No marks found in that'); return; }
+    var r = mergeMarks(incoming);
+    closeSheet();
+    renderAll();
+    if (document.body.dataset.page === 'marks') renderMarksPage();
+    toast(r.added + ' put back, ' + r.updated + ' updated, ' + r.kept + ' in all');
   }
 
   function exportText() {
@@ -662,7 +878,8 @@
     order().forEach(function (m) {
       if (m.ch !== lastCh) { lines.push('', '## ' + chTitle(m.ch), ''); lastCh = m.ch; }
       var head = m.scope === 'chapter' ? 'Whole chapter' : m.sec + ' ' + secTitle(m.ch, m.sec);
-      lines.push(head + '  [' + (m.need || m.type).toUpperCase() + ']');
+      lines.push(head + '  [' +
+        (m.need || kindLabel(m.k) || m.type).toUpperCase() + ']');
       if (m.quote) lines.push('    "' + m.quote + '"');
       if (m.note) lines.push('    ' + (m.type === 'request' ? 'Asked: ' : 'Note: ') + m.note);
       lines.push('');
@@ -729,6 +946,27 @@
       var b = e.target.closest('[data-del]');
       if (b) removeMark(b.dataset.del);
     });
+    var bk = document.getElementById('mk-backup');
+    if (bk) bk.addEventListener('click', function () {
+      if (!marks.length) { toast('Nothing to back up yet'); return; }
+      var name = '49er-marks-' + new Date().toISOString().slice(0, 10) + '.json';
+      shareFile(name, backupJSON(), 'application/json', function () {
+        noteBackup(); toast('Backed up');
+      });
+    });
+
+    var rs = document.getElementById('mk-restore');
+    var fi = document.getElementById('mk-file');
+    if (rs) rs.addEventListener('click', restoreSheet);
+    if (fi) fi.addEventListener('change', function () {
+      var f = fi.files && fi.files[0];
+      if (!f) return;
+      var r = new FileReader();
+      r.onload = function () { applyRestore(r.result); fi.value = ''; };
+      r.onerror = function () { toast('That file could not be read'); fi.value = ''; };
+      r.readAsText(f);
+    });
+
     document.getElementById('mk-copy').addEventListener('click', function () {
       if (!marks.length) { toast('Nothing to copy yet'); return; }
       copy(exportText());

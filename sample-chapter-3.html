@@ -569,6 +569,180 @@ button.bar-t:active { background: var(--bg-3); }
 @media print {
   .prog { display: none; }
 }
+/* ------------------------------------------------------ highlight palette
+   Added for build 11. Until now a highlight was one colour and said only
+   "this bit". Four colours let a mark carry a meaning, so the exported list
+   separates what the reader did not understand from what he disagreed with:
+
+     yellow = important, remember this
+     blue   = do not understand this yet
+     green  = agreed, this matches what we do
+     red    = disagree, or wrong for our boat
+
+   The values sit on a deliberate lightness ladder, yellow lightest, then
+   green, then red, so red and green stay apart for a reader with deuteranopia
+   or protanopia, where hue alone collapses. Green is pulled towards sea-green
+   so its residual chroma stays cool rather than falling in with yellow.
+
+   Every text-on-mark contrast was computed rather than judged by eye. The
+   worst is 5.94:1, sepia red, against a threshold of 4.5:1. */
+
+:root {
+  --mk-yellow: #FCE49A;   /* the same value as --mark, so marks saved before
+                             this change are indistinguishable from new ones */
+  --mk-blue:   #B8CEF0;
+  --mk-green:  #A1DEC9;
+  --mk-red:    #DC8A88;
+  --mk-note:   #584A2E;
+}
+
+body.t-sepia {
+  --mk-yellow: #F3DB98;   /* a shade deeper, so it still shows on cream */
+  --mk-blue:   #B1C8EB;
+  --mk-green:  #9BD8C5;
+  --mk-red:    #D68584;
+  --mk-note:   #594828;
+}
+
+body.t-dark {
+  --mk-yellow: #5A4A17;   /* the same value as --mark in this theme */
+  --mk-blue:   #1A3B5A;
+  --mk-green:  #1A4A3D;
+  --mk-red:    #52171D;
+  --mk-note:   #D3B172;
+}
+
+/* --------------------------------------------------------- the marks
+   A mark saved before this change carries no data-k, so --mk falls back to
+   --mark and it renders exactly as it did. */
+mark.hl                  { --mk: var(--mark); background: var(--mk); }
+mark.hl[data-k="yellow"] { --mk: var(--mk-yellow); }
+mark.hl[data-k="blue"]   { --mk: var(--mk-blue); }
+mark.hl[data-k="green"]  { --mk: var(--mk-green); }
+mark.hl[data-k="red"]    { --mk: var(--mk-red); }
+
+/* A mark that carries a note keeps its brass underline, darkened: plain
+   --brass reaches only 1.8:1 on the red and vanishes into it. */
+mark.hl.has-note { border-bottom: 2px solid var(--mk-note); }
+
+/* A request with no colour behaves exactly as before: no background, dashed
+   navy underline. With a colour, wiping the background would throw the
+   meaning away, so the colour stays as a wash and the dashes sit on it. */
+mark.hl.is-request[data-k] {
+  background: color-mix(in srgb, var(--mk) 42%, transparent);
+}
+@supports not (background: color-mix(in srgb, red 42%, transparent)) {
+  mark.hl.is-request[data-k] { background: none; }
+}
+
+/* Both at once. The two border-bottom declarations collide, so the note
+   signal needs a line of its own rather than losing silently. */
+mark.hl.has-note.is-request {
+  border-bottom: 2px dashed var(--navy-2);
+  text-decoration: underline;
+  -webkit-text-decoration-color: var(--mk-note);
+  text-decoration-color: var(--mk-note);
+  text-decoration-thickness: 2px;
+  text-underline-offset: .16em;
+  text-decoration-skip-ink: none;
+}
+
+/* ----------------------------------- the colour dots in the selection tool
+   Each dot is painted in the colour it applies, which is also what makes it
+   legible: the toolbar's background is var(--ink), so a dot's contrast
+   against it is the same number that keeps text readable on the mark. The
+   ::after widens the tap target to 36px without changing the circle, for
+   cold hands on a boat park. */
+.seltool .dots {
+  display: flex; align-items: center; gap: 7px;
+  padding: 0 8px; margin-left: 2px;
+  border-left: 1px solid rgba(127,127,127,.4);
+}
+.seltool .dot {
+  position: relative;
+  appearance: none; -webkit-appearance: none; border: 0; padding: 0; margin: 0;
+  width: 22px; height: 22px; border-radius: 50%;
+  cursor: pointer; flex: none;
+  --mk: var(--mark);
+  background: var(--mk);
+  box-shadow: inset 0 0 0 1px rgba(127,127,127,.5);
+}
+.seltool .dot::after { content: ""; position: absolute; inset: -7px; }
+.seltool .dot[data-k="yellow"] { --mk: var(--mk-yellow); }
+.seltool .dot[data-k="blue"]   { --mk: var(--mk-blue); }
+.seltool .dot[data-k="green"]  { --mk: var(--mk-green); }
+.seltool .dot[data-k="red"]    { --mk: var(--mk-red); }
+.seltool .dot:active { transform: scale(.86); }
+
+/* Pre-existing and unrelated to the palette, but found while measuring the
+   dots: in the dark theme the toolbar's background is var(--ink), which is
+   #E8EAED, while its buttons are #fff. White on near-white, 1.21:1. The dots
+   are fine either way because they are always measured against --ink; the
+   words were not. */
+body.t-dark .seltool button { color: var(--bg); }
+
+/* ------------------------------------------- the colour on the marks page */
+.mk-dot {
+  display: inline-block; width: 11px; height: 11px; border-radius: 50%;
+  margin-right: .45em; vertical-align: -1px; flex: none;
+  box-shadow: inset 0 0 0 1px rgba(127,127,127,.45);
+  background: var(--mark);
+}
+.mk-dot[data-k="yellow"] { background: var(--mk-yellow); }
+.mk-dot[data-k="blue"]   { background: var(--mk-blue); }
+.mk-dot[data-k="green"]  { background: var(--mk-green); }
+.mk-dot[data-k="red"]    { background: var(--mk-red); }
+
+.mk-key {
+  display: flex; flex-wrap: wrap; gap: .35em 1.3em;
+  margin: 0 0 18px; padding: 12px 14px;
+  border: 1px solid var(--rule); border-radius: 10px; background: var(--bg-2);
+  font-size: .86em; color: var(--ink-2);
+}
+.mk-key span { display: flex; align-items: center; white-space: nowrap; }
+
+/* the colour row inside a mark's own sheet */
+.kpick { display: flex; gap: 10px; margin: 2px 0 6px; }
+.kpick button {
+  appearance: none; border: 0; padding: 0; cursor: pointer;
+  width: 30px; height: 30px; border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgba(127,127,127,.5);
+  background: var(--mark);
+}
+.kpick button[data-k="yellow"] { background: var(--mk-yellow); }
+.kpick button[data-k="blue"]   { background: var(--mk-blue); }
+.kpick button[data-k="green"]  { background: var(--mk-green); }
+.kpick button[data-k="red"]    { background: var(--mk-red); }
+.kpick button[aria-pressed="true"] {
+  box-shadow: inset 0 0 0 1px rgba(127,127,127,.5), 0 0 0 3px var(--navy);
+}
+/* ------------------------------------------------------- backup and restore
+   Added for build 12. The one line that matters here is mk-state: it is the
+   only place the reader is told whether his marks exist anywhere but on the
+   iPad in his hands, so it sits above the list rather than below it and it is
+   never silent. */
+
+.mk-state {
+  margin: 0 0 16px;
+  padding: 11px 14px;
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--brass);
+  border-radius: 8px;
+  background: var(--bg-2);
+  font-size: .9em;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+.mk-state:empty { display: none; }
+.mk-state b { color: var(--ink); font-weight: 650; }
+.mk-state .warn { display: block; margin-top: .4em; color: var(--ink); }
+
+/* the picker is driven by the button in the restore sheet, never shown */
+#mk-file { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+
+/* the restore sheet's paste box wants to be obviously big enough for a whole
+   email, or the reader pastes one line of it and wonders why nothing happened */
+#rs-t { min-height: 8.5em; }
 </style>
 <title>3. Aerodynamic Theory</title>
 <script>
@@ -888,12 +1062,48 @@ There is usually one session in a season where the boat felt quick and nobody ca
     catch (e) { toast('Could not save on this device'); return false; }
   }
   var marks = readJSON(MK, []);
+
+  /* Best-effort storage can be evicted when a site has not been opened for
+     a while. Persistent mode is not evicted. Safari decides, and opening
+     the book from the home-screen icon rather than a Safari tab is what
+     makes it say yes, so the answer is recorded and shown to the reader
+     rather than assumed. */
+  var persisted = null;
+  if (navigator.storage && navigator.storage.persist) {
+    (navigator.storage.persisted ? navigator.storage.persisted()
+       : Promise.resolve(false))
+      .then(function (already) {
+        return already ? true : navigator.storage.persist();
+      })
+      .then(function (ok) {
+        persisted = !!ok;
+        if (document.body.dataset.page === 'marks') renderMarksPage();
+      })
+      .catch(function () { persisted = false; });
+  }
   var prefs = readJSON(PF, {});
   if (prefs.size == null) prefs.size = 1;
   if (!prefs.theme) {
     // follow the iPad's own appearance until the reader chooses otherwise
     prefs.theme = (window.matchMedia &&
       window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+  }
+
+  /* The four highlight colours and what each one is for. One list, used by
+     the selection tool, the mark sheet, the marks page and the export, so a
+     colour cannot mean one thing on the page and another in the email. */
+  var KINDS = [
+    { k: 'yellow', label: 'Important' },
+    { k: 'blue',   label: 'Do not understand' },
+    { k: 'green',  label: 'Agreed' },
+    { k: 'red',    label: 'Disagree' }
+  ];
+  function kindLabel(k) {
+    for (var i = 0; i < KINDS.length; i++) if (KINDS[i].k === k) return KINDS[i].label;
+    return '';
+  }
+  function dotHTML(k) {
+    return '<span class="mk-dot"' + (k ? ' data-k="' + esc(k) + '"' : '') + '></span>';
   }
 
   function saveMarks() { writeJSON(MK, marks); }
@@ -1187,6 +1397,7 @@ There is usually one session in a season where the boat felt quick and nobody ca
       var m = document.createElement('mark');
       m.className = attrs.cls;
       m.dataset.id = attrs.id;
+      if (attrs.k) m.dataset.k = attrs.k;
       node.parentNode.insertBefore(m, node);
       m.appendChild(node);
     });
@@ -1205,7 +1416,7 @@ There is usually one session in a season where the boat felt quick and nobody ca
       s = i; e = i + mk.raw.length;
     }
     var cls = 'hl' + (mk.note ? ' has-note' : '') + (mk.type === 'request' ? ' is-request' : '');
-    return wrapRange(el, s, e, { cls: cls, id: mk.id });
+    return wrapRange(el, s, e, { cls: cls, id: mk.id, k: mk.k || '' });
   }
 
   function cssq(s) { return String(s).replace(/"/g, '\\"'); }
@@ -1234,10 +1445,14 @@ There is usually one session in a season where the boat felt quick and nobody ca
   // ------------------------------------------------------ selection tool
   var tool = document.createElement('div');
   tool.className = 'seltool';
-  tool.innerHTML = '<button data-a="highlight">Highlight</button>' +
-                   '<button data-a="note">Note</button>' +
-                   '<button data-a="request">Ask</button>' +
-                   '<button data-a="copy">Copy</button>';
+  tool.innerHTML = '<span class="dots">' +
+    KINDS.map(function (x) {
+      return '<button class="dot" data-k="' + x.k + '" aria-label="' +
+             x.label + '"></button>';
+    }).join('') + '</span>' +
+    '<button data-a="note">Note</button>' +
+    '<button data-a="request">Ask</button>' +
+    '<button data-a="copy">Copy</button>';
   document.body.appendChild(tool);
 
   var pending = null;
@@ -1293,8 +1508,8 @@ There is usually one session in a season where the boat felt quick and nobody ca
     if (a === 'copy') {
       copy(p.quote); hideTool(); window.getSelection().removeAllRanges(); return;
     }
-    if (a === 'highlight') {
-      addMark(p, 'highlight', '', '');
+    if (b.dataset.k) {
+      addMark(p, 'highlight', '', '', b.dataset.k);
       hideTool(); window.getSelection().removeAllRanges(); return;
     }
     hideTool();
@@ -1302,16 +1517,18 @@ There is usually one session in a season where the boat felt quick and nobody ca
     composeSheet(p, a);
   });
 
-  function addMark(p, type, note, need) {
+  function addMark(p, type, note, need, k) {
     var mk = {
       id: uid(), ch: chNum, key: chKey, sec: p.sec, block: p.block,
       start: p.start, end: p.end, raw: p.raw, quote: p.quote,
-      type: type, note: note || '', need: need || '', ts: Date.now()
+      type: type, note: note || '', need: need || '', k: k || '',
+      ts: Date.now()
     };
     marks.push(mk);
     saveMarks();
     renderAll();
-    toast(type === 'request' ? 'Request saved' : type === 'note' ? 'Note saved' : 'Highlighted');
+    toast(type === 'request' ? 'Request saved' : type === 'note' ? 'Note saved'
+          : (kindLabel(k) || 'Highlighted'));
     return mk;
   }
 
@@ -1378,8 +1595,13 @@ There is usually one session in a season where the boat felt quick and nobody ca
     var mk = marks.filter(function (m) { return m.id === id; })[0];
     if (!mk) return;
     openSheet(
-      '<h3>' + (mk.type === 'request' ? 'Your request' : mk.note ? 'Your note' : 'Highlight') + '</h3>' +
+      '<h3>' + (mk.type === 'request' ? 'Your request' : mk.note ? 'Your note'
+        : (kindLabel(mk.k) || 'Highlight')) + '</h3>' +
       '<p class="meta">Section ' + esc(mk.sec) + (mk.need ? ' &middot; ' + esc(mk.need) : '') + '</p>' +
+      '<div class="kpick">' + KINDS.map(function (x) {
+        return '<button data-k="' + x.k + '" aria-label="' + x.label +
+               '" aria-pressed="' + (mk.k === x.k) + '"></button>';
+      }).join('') + '</div>' +
       '<div class="quote">' + esc(mk.quote) + '</div>' +
       (mk.note ? '<p>' + esc(mk.note) + '</p>' : '') +
       '<div class="row">' +
@@ -1387,6 +1609,17 @@ There is usually one session in a season where the boat felt quick and nobody ca
       '<button class="btn" id="ms-edit">' + (mk.type === 'request' ? 'Edit request' : 'Edit note') + '</button>' +
       (mk.type === 'request' ? '<button class="btn" id="ms-mail">Email it</button>' : '') +
       '<button class="btn btn-p" data-close="1">Close</button></div>');
+    var kp = sheet.querySelector('.kpick');
+    if (kp) kp.addEventListener('click', function (e) {
+      var b = e.target.closest('button'); if (!b) return;
+      mk.k = (mk.k === b.dataset.k) ? '' : b.dataset.k;
+      Array.prototype.forEach.call(kp.querySelectorAll('button'), function (x) {
+        x.setAttribute('aria-pressed', String(x.dataset.k === mk.k));
+      });
+      saveMarks(); renderAll();
+      if (document.body.dataset.page === 'marks') renderMarksPage();
+      toast(kindLabel(mk.k) || 'Colour removed');
+    });
     sheet.querySelector('#ms-del').addEventListener('click', function () { removeMark(id); closeSheet(); });
     var msm = sheet.querySelector('#ms-mail');
     if (msm) msm.addEventListener('click', function () { closeSheet(); emailRequest(mk); });
@@ -1481,7 +1714,11 @@ There is usually one session in a season where the boat felt quick and nobody ca
     var list = document.getElementById('mk-list');
     if (!list) return;
     var f = (document.getElementById('mk-filter') || {}).value || 'all';
-    var rows = order().filter(function (m) { return f === 'all' || m.type === f; });
+    var rows = order().filter(function (m) {
+      if (f === 'all') return true;
+      if (f.slice(0, 2) === 'k:') return (m.k || '') === f.slice(2);
+      return m.type === f;
+    });
     if (!rows.length) {
       list.innerHTML = '<p class="empty">Nothing marked yet. Select any passage while ' +
         'reading to highlight it, add a note, or ask for more detail.</p>';
@@ -1499,7 +1736,8 @@ There is usually one session in a season where the boat felt quick and nobody ca
         '<div class="mk" data-id="' + esc(m.id) + '">' +
         '<div class="mk-h"><span class="mk-s">' + esc(label) + '</span>' +
         '<span class="mk-c">' + esc(secTitle(m.ch, m.sec)) + '</span>' +
-        '<span class="mk-k ' + kind + '">' + esc(m.need || kind) + '</span></div>' +
+        '<span class="mk-k ' + kind + '">' + dotHTML(m.k) +
+          esc(m.need || kindLabel(m.k) || kind) + '</span></div>' +
         (m.quote ? '<div class="mk-q">' + esc(m.quote) + '</div>' : '') +
         (m.note ? '<p class="mk-n"><b>' +
           (m.type === 'request' ? 'Asked' : 'Note') + ':</b> ' + esc(m.note) + '</p>' : '') +
@@ -1510,7 +1748,159 @@ There is usually one session in a season where the boat felt quick and nobody ca
         '<button data-del="' + esc(m.id) + '">Delete</button>' +
         '</div></div>');
     });
-    list.innerHTML = out.join('');
+    var st = document.getElementById('mk-state');
+    if (st) st.innerHTML = backupState();
+    list.innerHTML = '<div class="mk-key">' + KINDS.map(function (x) {
+      return '<span>' + dotHTML(x.k) + esc(x.label) + '</span>';
+    }).join('') + '</div>' + out.join('');
+  }
+
+  /* ----------------------------------------------------------- backup
+     One envelope, versioned, so a file written today can still be read
+     after the marks themselves gain a field. */
+  var BACKUP_KIND = '49er theory book marks';
+
+  function backupJSON() {
+    return JSON.stringify({
+      kind: BACKUP_KIND, v: 1, build: D.BUILD || '',
+      saved: new Date().toISOString(), count: marks.length, marks: marks
+    }, null, 1);
+  }
+
+  /* Union by id, and where the same mark exists on both sides the newer
+     one wins. Nothing is dropped: a restore can only add. */
+  function mergeMarks(incoming) {
+    if (!incoming || !incoming.length) return { added: 0, updated: 0, kept: marks.length };
+    var byId = {}, added = 0, updated = 0;
+    marks.forEach(function (m) { byId[m.id] = m; });
+    incoming.forEach(function (m) {
+      if (!m || !m.id) return;
+      var have = byId[m.id];
+      if (!have) { byId[m.id] = m; added++; }
+      else if ((m.ts || 0) > (have.ts || 0)) { byId[m.id] = m; updated++; }
+    });
+    marks = Object.keys(byId).map(function (k) { return byId[k]; });
+    saveMarks();
+    return { added: added, updated: updated, kept: marks.length };
+  }
+
+  /* Accepts a backup file, a bare array, or the whole text of an export
+     email, which carries its machine-readable copy on the last line. That
+     last case is what makes every export already sent recoverable. */
+  function marksFromText(text) {
+    var t = String(text || '').trim();
+    if (!t) return null;
+    var tries = [t];
+    var i = t.lastIndexOf('[');
+    if (i > 0) tries.push(t.slice(i));
+    var j = t.indexOf('{');
+    if (j > 0) tries.push(t.slice(j));
+    for (var n = 0; n < tries.length; n++) {
+      try {
+        var o = JSON.parse(tries[n]);
+        if (Array.isArray(o)) return o;
+        if (o && Array.isArray(o.marks)) return o.marks;
+      } catch (e) { /* try the next shape */ }
+    }
+    return null;
+  }
+
+  /* The existing Export already reaches iCloud Drive through the share
+     sheet, so backing up uses the same road rather than a second one. */
+  function shareFile(name, text, mime, done) {
+    if (navigator.share) {
+      var payload = { title: name, text: text };
+      if (navigator.canShare && window.File) {
+        try {
+          var file = new File([text], name, { type: mime });
+          if (navigator.canShare({ files: [file] })) payload = { files: [file], title: name };
+        } catch (e) { /* fall through to text share */ }
+      }
+      navigator.share(payload).then(function () { if (done) done(); },
+                                    function () { copy(text); });
+      return;
+    }
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([text], { type: mime }));
+    a.download = name;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
+    if (done) done();
+  }
+
+  function noteBackup() {
+    prefs.backup = { ts: Date.now(), n: marks.length };
+    writeJSON(PF, prefs);
+    if (document.body.dataset.page === 'marks') renderMarksPage();
+  }
+
+  function backupState() {
+    var b = prefs.backup, out = [];
+    var newest = 0;
+    marks.forEach(function (m) { if ((m.ts || 0) > newest) newest = m.ts || 0; });
+    var since = marks.filter(function (m) {
+      return !b || (m.ts || 0) > b.ts;
+    }).length;
+    if (!marks.length) {
+      out.push('Nothing marked yet.');
+    } else if (!b) {
+      out.push('<b>These ' + marks.length + ' marks exist only on this iPad.</b> ' +
+               'Tap Back up and save the file to iCloud Drive.');
+    } else if (since) {
+      out.push('<b>' + since + ' mark' + (since === 1 ? '' : 's') +
+               ' since the last backup</b>, which was ' + when(b.ts) + '.');
+    } else {
+      out.push('Backed up ' + when(b.ts) + '. Nothing new since.');
+    }
+    if (persisted === false) {
+      out.push('<span class="warn">This iPad has not given the book ' +
+               'permanent storage. Open it from the home-screen icon rather ' +
+               'than a Safari tab, and back up.</span>');
+    }
+    return out.join(' ');
+  }
+
+  function when(ts) {
+    var d = new Date(ts), now = Date.now();
+    var days = Math.floor((now - ts) / 86400000);
+    if (days <= 0) return 'today';
+    if (days === 1) return 'yesterday';
+    if (days < 14) return days + ' days ago';
+    return 'on ' + d.toLocaleDateString('en-GB',
+      { day: 'numeric', month: 'long', year: 'numeric' });
+  }
+
+  function restoreSheet() {
+    openSheet(
+      '<h3>Put marks back</h3>' +
+      '<p class="meta">Restoring only adds. Nothing already on this iPad is ' +
+      'removed or overwritten by an older copy, so a mark deleted after the ' +
+      'backup was taken will come back.</p>' +
+      '<div class="row"><button class="btn btn-p" id="rs-file">' +
+      'Choose a backup file</button></div>' +
+      '<label>Or paste the text of an export email</label>' +
+      '<textarea id="rs-t" placeholder="Paste the whole email, including the ' +
+      'machine-readable line at the bottom"></textarea>' +
+      '<div class="row"><button class="btn" data-close="1">Cancel</button>' +
+      '<button class="btn btn-p" id="rs-ok">Put them back</button></div>');
+    sheet.querySelector('#rs-file').addEventListener('click', function () {
+      var fi = document.getElementById('mk-file');
+      closeSheet();
+      if (fi) fi.click();
+    });
+    sheet.querySelector('#rs-ok').addEventListener('click', function () {
+      applyRestore(sheet.querySelector('#rs-t').value);
+    });
+  }
+
+  function applyRestore(text) {
+    var incoming = marksFromText(text);
+    if (!incoming) { toast('No marks found in that'); return; }
+    var r = mergeMarks(incoming);
+    closeSheet();
+    renderAll();
+    if (document.body.dataset.page === 'marks') renderMarksPage();
+    toast(r.added + ' put back, ' + r.updated + ' updated, ' + r.kept + ' in all');
   }
 
   function exportText() {
@@ -1522,7 +1912,8 @@ There is usually one session in a season where the boat felt quick and nobody ca
     order().forEach(function (m) {
       if (m.ch !== lastCh) { lines.push('', '## ' + chTitle(m.ch), ''); lastCh = m.ch; }
       var head = m.scope === 'chapter' ? 'Whole chapter' : m.sec + ' ' + secTitle(m.ch, m.sec);
-      lines.push(head + '  [' + (m.need || m.type).toUpperCase() + ']');
+      lines.push(head + '  [' +
+        (m.need || kindLabel(m.k) || m.type).toUpperCase() + ']');
       if (m.quote) lines.push('    "' + m.quote + '"');
       if (m.note) lines.push('    ' + (m.type === 'request' ? 'Asked: ' : 'Note: ') + m.note);
       lines.push('');
@@ -1589,6 +1980,27 @@ There is usually one session in a season where the boat felt quick and nobody ca
       var b = e.target.closest('[data-del]');
       if (b) removeMark(b.dataset.del);
     });
+    var bk = document.getElementById('mk-backup');
+    if (bk) bk.addEventListener('click', function () {
+      if (!marks.length) { toast('Nothing to back up yet'); return; }
+      var name = '49er-marks-' + new Date().toISOString().slice(0, 10) + '.json';
+      shareFile(name, backupJSON(), 'application/json', function () {
+        noteBackup(); toast('Backed up');
+      });
+    });
+
+    var rs = document.getElementById('mk-restore');
+    var fi = document.getElementById('mk-file');
+    if (rs) rs.addEventListener('click', restoreSheet);
+    if (fi) fi.addEventListener('change', function () {
+      var f = fi.files && fi.files[0];
+      if (!f) return;
+      var r = new FileReader();
+      r.onload = function () { applyRestore(r.result); fi.value = ''; };
+      r.onerror = function () { toast('That file could not be read'); fi.value = ''; };
+      r.readAsText(f);
+    });
+
     document.getElementById('mk-copy').addEventListener('click', function () {
       if (!marks.length) { toast('Nothing to copy yet'); return; }
       copy(exportText());

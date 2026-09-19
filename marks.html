@@ -41,6 +41,8 @@ try {
 <p class="sub">Everything on this page is stored on this iPad only. It is not sent anywhere until you export it.</p>
 <div class="marks-tools">
   <button class="btn btn-p" id="mk-email">Email to Ronald</button>
+  <button class="btn" id="mk-backup">Back up</button>
+  <button class="btn" id="mk-restore">Restore</button>
   <button class="btn" id="mk-export">Export</button>
   <button class="btn" id="mk-copy">Copy all</button>
   <select class="btn" id="mk-filter">
@@ -48,8 +50,14 @@ try {
     <option value="highlight">Highlights only</option>
     <option value="note">Notes only</option>
     <option value="request">Requests only</option>
+    <option value="k:yellow">Important</option>
+    <option value="k:blue">Do not understand</option>
+    <option value="k:green">Agreed</option>
+    <option value="k:red">Disagree</option>
   </select>
 </div>
+<input type="file" id="mk-file" accept=".json,application/json,.txt,text/plain">
+<p class="mk-state" id="mk-state"></p>
 <div id="mk-list" class="marks-list"></div>
 
 </main>
