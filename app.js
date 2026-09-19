@@ -173,7 +173,7 @@
       }).join('');
     return '<label for="sel-voice">Voice for the walkthrough</label>' +
       '<select id="sel-voice">' + opts + '</select>' +
-      '<p class="meta">A woman\'s voice, so the male voices are left out of this list. '
+      '<p class="meta">A woman\'s voice, so the male voices are left out of this list. ' +
       'Pick one and it speaks a line so you can hear it. For a much ' +
       'better voice, download an Enhanced or Premium English voice on this iPad under ' +
       'Settings, Accessibility, Spoken Content, Voices, then come back here.</p>';
@@ -708,15 +708,164 @@
     });
   }
 
-  function renderMarksPage() {
-    var list = document.getElementById('mk-list');
-    if (!list) return;
+  /* ------------------------------------------------ one filter, two views
+     Both views read the select through this, so Cards and Notes can never
+     disagree about what the reader asked to see. */
+  function filteredRows() {
     var f = (document.getElementById('mk-filter') || {}).value || 'all';
-    var rows = order().filter(function (m) {
+    return order().filter(function (m) {
       if (f === 'all') return true;
       if (f.slice(0, 2) === 'k:') return (m.k || '') === f.slice(2);
       return m.type === f;
     });
+  }
+
+  /* Where a mark sits in the book. One function, so a passage in the notes
+     view and the same passage's card cannot lead to two different places. */
+  function markHref(m) {
+    return 'ch' + esc(m.key || m.ch) + '.html#' +
+      (m.scope === 'chapter' ? '' : 'sec-' + String(m.sec).replace(/\./g, '-'));
+  }
+
+  /* A request, written as one line that begins with what he asked for. */
+  function askLine(m) {
+    var bits = [];
+    if (m.need) bits.push(m.need);
+    if (m.note) bits.push(m.note);
+    if (!bits.length) bits.push('More detail here');
+    return '<b>Asked:</b> ' + esc(bits.join('. '));
+  }
+
+  /* ------------------------------------------- cards, or continuous notes
+     Conrad asked to see everything he has marked together, reading as a page
+     of notes rather than as a stack of cards. It is a second view of the one
+     page, not a second page, so the filter, the backup, the restore and the
+     export keep working on the same marks and there is still one place to
+     look. The choice rides in the prefs his text size and background already
+     live in, so the iPad opens where he left it. */
+  function marksView() {
+    return prefs.mkview === 'notes' ? 'notes' : 'cards';
+  }
+
+  function setMarksView(v) {
+    prefs.mkview = v === 'notes' ? 'notes' : 'cards';
+    writeJSON(PF, prefs);
+    renderMarksPage();
+  }
+
+  /* The switch is put into the page by the app rather than by the builder,
+     at the end of the tools row next to the filter. Built once, on the first
+     render, and only re-pressed after that. */
+  function viewSwitch() {
+    var tools = document.querySelector('.marks-tools');
+    if (!tools) return;
+    var seg = document.getElementById('mk-view');
+    if (!seg) {
+      seg = document.createElement('div');
+      seg.id = 'mk-view';
+      seg.className = 'seg mk-view';
+      seg.setAttribute('role', 'group');
+      seg.setAttribute('aria-label', 'How to show what you have marked');
+      seg.innerHTML =
+        '<button type="button" data-v="cards">Cards</button>' +
+        '<button type="button" data-v="notes">Notes</button>';
+      tools.appendChild(seg);
+      seg.addEventListener('click', function (e) {
+        var b = e.target.closest('button');
+        if (b) setMarksView(b.dataset.v);
+      });
+    }
+    var now = marksView();
+    Array.prototype.forEach.call(seg.querySelectorAll('button'), function (b) {
+      b.setAttribute('aria-pressed', String(b.dataset.v === now));
+    });
+  }
+
+  /* Every existing caller still calls renderMarksPage, and this is the only
+     place that decides what that means, so no call site can draw the wrong
+     view after a delete, a restore, a colour change or a filter. */
+  function renderMarksPage() {
+    viewSwitch();
+    if (marksView() === 'notes') renderNotesView();
+    else renderCardsView();
+  }
+
+  /* -------------------------------------------------------- the notes view
+     The same rows, in the same order, under the same chapter headings, set as
+     reading matter: the section number and title as a light subheading, then
+     the marked sentences one under another, each wearing the colour it wears
+     in the book. A note he wrote sits underneath its passage, indented. A
+     request says what he asked for. Consecutive passages from one section run
+     on under the one subheading rather than repeating it.
+
+     Nothing here carries a Delete button. This is the view that reads and
+     Cards is the view that edits, so a passage is not surrounded by controls
+     he is not using. Tapping one opens it where it sits in the book, which is
+     also where its colour and its note can be changed, and the closing line
+     says so. */
+  function renderNotesView() {
+    var list = document.getElementById('mk-list');
+    if (!list) return;
+    var st = document.getElementById('mk-state');
+    if (st) st.innerHTML = backupState();
+
+    var rows = filteredRows();
+    if (!rows.length) {
+      list.innerHTML = '<p class="empty">Nothing to read here yet. Highlight a ' +
+        'passage while you are reading and it appears on this page.</p>';
+      return;
+    }
+
+    var out = [], tail = [], lastCh = null, lastSec = null;
+
+    /* A request about a whole chapter has no passage to lift out. Rather than
+       let it fall out of a view that is made of passages, it is held back and
+       set at the end of its own chapter under a heading that says what it
+       is. */
+    function flushTail() {
+      if (!tail.length) return;
+      out.push('<h3 class="nv-ask-h">Questions about this chapter as a whole</h3>');
+      out.push(tail.join(''));
+      tail = [];
+    }
+
+    rows.forEach(function (m) {
+      if (m.ch !== lastCh) {
+        flushTail();
+        out.push('<h2 class="parth">' + esc(chTitle(m.ch)) + '</h2>');
+        lastCh = m.ch;
+        lastSec = null;
+      }
+      if (!m.quote) {
+        tail.push('<a class="nv-whole" href="' + markHref(m) + '">' +
+                  askLine(m) + '</a>');
+        return;
+      }
+      if (m.sec !== lastSec) {
+        out.push('<h3 class="nv-sec"><span class="nv-secn">' + esc(m.sec) +
+                 '</span><span class="nv-sect">' + esc(secTitle(m.ch, m.sec)) +
+                 '</span></h3>');
+        lastSec = m.sec;
+      }
+      out.push('<a class="nv-q' + (m.type === 'request' ? ' is-request' : '') +
+               '" href="' + markHref(m) + '"' +
+               (m.k ? ' data-k="' + esc(m.k) + '"' : '') + '>' +
+               esc(m.quote) + '</a>');
+      if (m.type === 'request') out.push('<p class="nv-ask">' + askLine(m) + '</p>');
+      else if (m.note) out.push('<p class="nv-n">' + esc(m.note) + '</p>');
+    });
+    flushTail();
+
+    list.innerHTML = out.join('') +
+      '<p class="nv-foot">This page is for reading. To change a colour, edit a ' +
+      'note or delete a mark, tap the passage to open it in the book, or press ' +
+      'Cards above.</p>';
+  }
+
+  function renderCardsView() {
+    var list = document.getElementById('mk-list');
+    if (!list) return;
+    var rows = filteredRows();
     if (!rows.length) {
       list.innerHTML = '<p class="empty">Nothing marked yet. Select any passage while ' +
         'reading to highlight it, add a note, or ask for more detail.</p>';
@@ -740,9 +889,7 @@
         (m.note ? '<p class="mk-n"><b>' +
           (m.type === 'request' ? 'Asked' : 'Note') + ':</b> ' + esc(m.note) + '</p>' : '') +
         '<div class="mk-a">' +
-        '<a href="ch' + esc(m.key || m.ch) + '.html#' +
-        (m.scope === 'chapter' ? '' : 'sec-' + String(m.sec).replace(/\./g, '-')) +
-        '">Open in the book</a>' +
+        '<a href="' + markHref(m) + '">Open in the book</a>' +
         '<button data-del="' + esc(m.id) + '">Delete</button>' +
         '</div></div>');
     });
@@ -969,6 +1116,54 @@
   function emailRequest(mk) {
     var where = mk.scope === 'chapter' ? 'chapter ' + mk.ch : 'section ' + mk.sec;
     openMail('49er theory book, request on ' + where, requestBody(mk));
+  }
+
+  /* ------------------------------------------------- the vocabulary page
+     203 entries is more than anyone scrolls. The box filters on the headword
+     and on the other names the same thing goes by, since a reader looking
+     something up here has usually heard it called the other one. */
+  if (document.body.dataset.page === 'words') {
+    var wq = document.getElementById('wd-q');
+    var wlist = document.getElementById('wd-list');
+    var wcount = document.getElementById('wd-count');
+    var witems = wlist ? wlist.querySelectorAll('.witem') : [];
+    var wletters = wlist ? wlist.querySelectorAll('.wletter') : [];
+
+    var runWordFilter = function () {
+      var q = (wq.value || '').trim().toLowerCase();
+      var shown = 0;
+      Array.prototype.forEach.call(witems, function (el) {
+        var hit = !q || (el.dataset.k || '').indexOf(q) >= 0;
+        el.hidden = !hit;
+        if (hit) shown++;
+      });
+      /* a letter with nothing left under it is noise */
+      Array.prototype.forEach.call(wletters, function (h) {
+        var any = false, n = h.nextElementSibling;
+        while (n && !n.classList.contains('wletter')) {
+          if (n.classList.contains('witem') && !n.hidden) { any = true; break; }
+          n = n.nextElementSibling;
+        }
+        h.hidden = !any;
+      });
+      if (wcount) {
+        wcount.textContent = !q ? witems.length + ' words'
+          : shown === 0 ? 'No word here matches that'
+          : shown === 1 ? '1 word' : shown + ' words';
+      }
+    };
+
+    if (wq) {
+      wq.addEventListener('input', runWordFilter);
+      wq.addEventListener('search', runWordFilter);
+      runWordFilter();
+    }
+    var wclear = document.getElementById('wd-clear');
+    if (wclear) wclear.addEventListener('click', function () {
+      wq.value = '';
+      runWordFilter();
+      wq.focus();
+    });
   }
 
   if (document.body.dataset.page === 'marks') {

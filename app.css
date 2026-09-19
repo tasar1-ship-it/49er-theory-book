@@ -786,3 +786,285 @@ figure.fig.hasanim:active .playtag { background: var(--bg-3); }
 @media print {
   .playtag { display: none; }
 }
+/* ---------------------------------------------------------- the notes view
+   Added for build 16. Conrad asked for the highlighted areas to come together
+   on one page so he could see everything highlighted at once, reading as a
+   page of notes rather than a stack of cards. The cards are still there and
+   are still where a mark is edited or deleted; this is the one for reading.
+
+   The washes are not new colours. They are the same four tokens marks.css
+   defines, and marks.css redefines all four for the sepia and dark themes, so
+   a passage lifted onto this page is the colour it is in the book in whichever
+   theme he is reading. --mk-note is the same token a marked note already uses.
+
+   Every text-on-colour pair here was computed rather than judged by eye, by
+   contrast_notes.py, over all three themes and the palette printing forces:
+   60 pairs, all above the book's 4.5:1 standard for body text, the worst of
+   them 5.94:1, which is the sepia red and is the same worst case marks.css
+   already carries. --ink-3 is deliberately not used for any of this text: it
+   reaches only 4.14:1 on the light background and 4.47:1 on sepia. */
+
+/* -------------------------------------------------------- the view switch
+   A .seg, so it is the control the reading settings already use, sized to
+   stand level with the .btn buttons it shares the tools row with rather than
+   sitting a couple of pixels short of them. */
+.mk-view { flex: none; gap: 0; }
+.mk-view button {
+  font-size: .95em;
+  padding: 11px 17px;
+  border-radius: 0;
+  margin-left: -1px;
+  position: relative;
+}
+.mk-view button:first-child {
+  border-radius: 11px 0 0 11px;
+  margin-left: 0;
+}
+.mk-view button:last-child { border-radius: 0 11px 11px 0; }
+/* app.css paints a pressed .seg button white on var(--navy), and in the dark
+   theme --navy is a pale blue, so that is white on near-white. The page's own
+   background is the right ink for it, and is right in all three themes:
+   10.86:1 light, 9.23:1 sepia, 9.61:1 dark. The existing controls that do the
+   same thing are left alone; this is a new one and need not inherit it. */
+.mk-view button[aria-pressed="true"] { color: var(--bg); z-index: 1; }
+
+/* ------------------------------------------------------- section headings
+   Light, because the reader is here for the passages, not the apparatus. The
+   number keeps the brass and the tabular figures it wears in the book. */
+.nv-sec {
+  display: flex; gap: .7em; align-items: baseline;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: .94em; font-weight: 600; line-height: 1.35;
+  color: var(--ink-2);
+  margin: 1.9em 0 .7em;
+}
+.nv-sec .nv-secn {
+  flex: none; color: var(--brass); font-variant-numeric: tabular-nums;
+}
+.nv-sec .nv-sect { min-width: 0; }
+h2.parth + .nv-sec { margin-top: 1em; }
+
+/* -------------------------------------------------------------- a passage
+   Set in the book's serif at the book's size, so it reads as the sentence it
+   was rather than as an entry in a list. It is a link to where it sits in the
+   book and must not look like one: the reader is reading, not choosing. */
+.nv-q {
+  display: block;
+  font-family: Charter, "Bitstream Charter", Georgia, "Times New Roman", serif;
+  font-size: 1.22em;
+  line-height: 1.6;
+  color: var(--ink);
+  text-decoration: none;
+  margin: 0 0 .5em;
+  padding: .32em .5em;
+  border-radius: 4px;
+  --mk: var(--mark);
+  background: var(--mk);
+}
+.nv-q[data-k="yellow"] { --mk: var(--mk-yellow); }
+.nv-q[data-k="blue"]   { --mk: var(--mk-blue); }
+.nv-q[data-k="green"]  { --mk: var(--mk-green); }
+.nv-q[data-k="red"]    { --mk: var(--mk-red); }
+.nv-q:active { filter: brightness(.95); }
+
+/* A request wears its colour at the strength the book gives it, 42 per cent,
+   so the same passage does not change meaning between the two places. Without
+   a colour it gets no wash at all, again as in the book, and a rule in the
+   link navy instead, because a block of text has no underline to dash. */
+.nv-q.is-request {
+  border-left: 3px solid var(--navy-2);
+  padding-left: .55em;
+}
+.nv-q.is-request[data-k] {
+  background: color-mix(in srgb, var(--mk) 42%, transparent);
+  border-left-color: var(--mk);
+}
+.nv-q.is-request:not([data-k]) { background: none; }
+/* Where color-mix is missing the wash goes rather than arriving at full
+   strength, which is what marks.css does; here the left rule still carries
+   the colour, so the meaning is not lost with it. */
+@supports not (background: color-mix(in srgb, red 42%, transparent)) {
+  .nv-q.is-request[data-k] { background: none; }
+}
+
+/* ------------------------------------------- what he wrote underneath it
+   Indented and ruled in the note colour, so his own voice is visibly not the
+   book's. A note carries no label: the indent says whose it is. A request
+   does, because the label is the thing he asked for. */
+.nv-n, .nv-ask {
+  margin: -.05em 0 1.35em 1.3em;
+  padding-left: .9em;
+  border-left: 2px solid var(--mk-note);
+  color: var(--ink-2);
+  font-size: .98em;
+  line-height: 1.5;
+}
+.nv-n { font-style: italic; }
+.nv-ask b { color: var(--mk-note); font-weight: 700; font-style: normal; }
+
+/* --------------------------------------- questions about a whole chapter
+   A request on a whole chapter, or on a panel, has no passage to lift out. It
+   is set at the end of its chapter rather than dropped, in a dashed box so it
+   is plainly not a quotation from the book. */
+.nv-ask-h {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: .88em; font-weight: 700; letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  margin: 2em 0 .7em;
+}
+.nv-whole {
+  display: block; text-decoration: none;
+  color: var(--ink-2); line-height: 1.5;
+  margin: 0 0 .6em; padding: .55em .75em;
+  border: 1px dashed var(--rule-2); border-radius: 8px;
+  background: var(--bg-2);
+}
+.nv-whole b { color: var(--navy); font-weight: 700; }
+.nv-whole:active { background: var(--bg-3); }
+
+/* ------------------------------------------------------- the closing line
+   The one place that says where the editing lives, so a reader who wants to
+   delete something is never stuck in a view that cannot. */
+.nv-foot {
+  margin: 2.6em 0 0;
+  padding-top: 1em;
+  border-top: 1px solid var(--rule);
+  color: var(--ink-2);
+  font-size: .95em;
+  line-height: 1.5;
+}
+
+/* ------------------------------------------------------------------ print
+   A page of notes is the sort of thing somebody prints, so it prints. The
+   theme is forced back to the light palette whatever he is reading in,
+   because a dark wash printed on white paper is either a block of ink or,
+   with backgrounds off, near-white text on nothing. The extra html in the
+   selector is only there to outrank body.t-dark, which is equally specific
+   and would otherwise win or lose on file order. */
+@media print {
+  html body[data-page="marks"] {
+    --ink: #15181C; --ink-2: #3A424B; --ink-3: #55606B;
+    --bg: #FFFFFF; --bg-2: #FFFFFF; --bg-3: #FFFFFF;
+    --rule: #B9B9B9; --rule-2: #9A9A9A;
+    --navy: #0F3D5E; --navy-2: #1E5C86; --brass: #7A6030;
+    --mark: #FCE49A; --mark-2: #F7D571;
+    --mk-yellow: #FCE49A;
+    --mk-blue:   #B8CEF0;
+    --mk-green:  #A1DEC9;
+    --mk-red:    #DC8A88;
+    --mk-note:   #584A2E;
+    background: #FFFFFF;
+    color: var(--ink);
+  }
+  /* the controls are not part of the notes, and neither is the backup line */
+  body[data-page="marks"] .marks-tools,
+  body[data-page="marks"] .mk-state,
+  body[data-page="marks"] #mk-file,
+  body[data-page="marks"] .toast,
+  body[data-page="marks"] .nv-foot { display: none !important; }
+
+  body[data-page="marks"] .wrap { max-width: none; padding: 0; }
+  body[data-page="marks"] .marks-list { font-size: 1em; }
+
+  /* the wash is the point of the page, so it is printed rather than dropped */
+  .nv-q, .nv-whole {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    break-inside: avoid; page-break-inside: avoid;
+  }
+  /* and a heading does not end a sheet with nothing under it */
+  body[data-page="marks"] h2.parth, .nv-sec, .nv-ask-h {
+    break-after: avoid; page-break-after: avoid;
+  }
+  .nv-q, .nv-whole, .nv-n, .nv-ask { orphans: 2; widows: 2; }
+}
+/* ------------------------------------------------------- the vocabulary page
+   Added for build 16. 203 short entries, which is a different kind of page from
+   the glossary: the glossary is read, this one is looked things up in. So the
+   search box is the first thing on it and stays put, the letters are landmarks
+   for a thumb rather than decoration, and each entry is compact enough that a
+   phone shows several at once.
+
+   Every colour here is one of the tokens app.css already defines per theme, so
+   light, sepia and dark are handled by the same rules with nothing restated. */
+
+/* ------------------------------------------------------------- the search box
+   Sticky under the top bar. The bar is 56px on the smallest layout and the
+   glossary uses scroll-margin-top: 76px for the same reason, so 56px is the
+   offset that puts this immediately beneath it. */
+.wd-find {
+  position: sticky; top: 56px; z-index: 5;
+  margin: 0 0 1.4em; padding: 12px 0 10px;
+  background: var(--bg); border-bottom: 1px solid var(--rule);
+}
+.wd-row { display: flex; gap: 8px; align-items: center; }
+.wd-find input[type="search"] {
+  flex: 1 1 auto; min-width: 0;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 17px;               /* 17px or the iPad zooms the page on focus */
+  padding: 10px 12px; border-radius: 10px;
+  border: 1px solid var(--rule-2); background: var(--bg-2); color: var(--ink);
+  -webkit-appearance: none; appearance: none;
+}
+.wd-find input[type="search"]:focus {
+  outline: 2px solid var(--navy); outline-offset: 1px; border-color: var(--navy);
+}
+.wd-find input[type="search"]::placeholder { color: var(--ink-3); }
+#wd-clear {
+  flex: 0 0 auto;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px; font-weight: 600; color: var(--navy);
+  padding: 10px 14px; border-radius: 10px;
+  border: 1px solid var(--rule-2); background: var(--bg-2);
+}
+#wd-clear:active { background: var(--bg-3); }
+.wd-count {
+  margin: 8px 0 0; font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 13px; color: var(--ink-2);
+}
+
+/* ---------------------------------------------------------- letter landmarks */
+.wletter {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 13px; font-weight: 700; letter-spacing: .08em;
+  color: var(--brass); text-transform: uppercase;
+  margin: 1.8em 0 .8em; padding-bottom: 4px;
+  border-bottom: 1px solid var(--rule);
+}
+.wletter:first-of-type { margin-top: .4em; }
+
+/* ----------------------------------------------------------------- an entry */
+.witem {
+  margin: 0 0 1.25em; padding: 0 0 1.1em;
+  border-bottom: 1px solid var(--rule);
+  scroll-margin-top: 120px;      /* bar plus the sticky search box */
+}
+.witem:last-child { border-bottom: 0; }
+.witem h3 {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 1em; font-weight: 700; color: var(--navy);
+  margin: 0 0 .15em;
+}
+/* the other names it goes by, which is the reason this page exists */
+.w-also {
+  margin: 0 0 .45em;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: .8em; color: var(--ink-2); line-height: 1.5;
+}
+.w-also b { font-weight: 600; color: var(--ink-2); }
+.witem .w-d { margin: 0; font-size: .92em; }
+/* the trap. Set apart, because it is the part that stops a mistake rather than
+   the part that answers the question. */
+.witem .w-t {
+  margin: .55em 0 0; padding: 0 0 0 .85em;
+  border-left: 2px solid var(--brass);
+  font-size: .86em; color: var(--ink-2); line-height: 1.55;
+}
+
+/* ------------------------------------------------------------------- print */
+@media print {
+  .wd-find, .wd-count { display: none; }
+  .witem, .wletter { break-inside: avoid; }
+  .wletter { break-after: avoid; }
+}
