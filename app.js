@@ -595,6 +595,37 @@
     });
   }
 
+  /* ------------------------------------------------ figures that move
+     A figure with an animated companion carries it in a <template>. The
+     template is cloned into the sheet on a tap, which is what starts it, and
+     cloned again on Replay. */
+  function animSheet(fig) {
+    var tpl = fig.querySelector('template.figanim');
+    if (!tpl) return;
+    var cap = fig.querySelector('figcaption');
+    openSheet(
+      '<h3>' + esc(fig.dataset.animTitle || 'The same figure, moving') + '</h3>' +
+      '<div class="animwrap" id="an-box"></div>' +
+      '<div class="an-row"><button class="btn" id="an-again">Play it again</button>' +
+      '<button class="btn btn-p" data-close="1">Close</button></div>');
+    var box = sheet.querySelector('#an-box');
+
+    function run() {
+      box.innerHTML = '';
+      box.appendChild(tpl.content.cloneNode(true));
+    }
+    run();
+    sheet.querySelector('#an-again').addEventListener('click', run);
+  }
+
+  if (article) article.addEventListener('click', function (e) {
+    /* a tap on a source tag, a concept link or a mark inside the caption is
+       that thing's tap, not the figure's */
+    if (e.target.closest('a, button, mark')) return;
+    var fig = e.target.closest('figure.fig.hasanim');
+    if (fig) { e.preventDefault(); animSheet(fig); }
+  });
+
   // -------------------------------------------------- chapter ask button
   var askBtn = document.getElementById('ask-chapter');
   if (askBtn) askBtn.addEventListener('click', function () {

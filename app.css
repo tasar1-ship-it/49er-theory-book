@@ -735,3 +735,54 @@ body.t-dark .seltool button { color: var(--bg); }
 /* the restore sheet's paste box wants to be obviously big enough for a whole
    email, or the reader pastes one line of it and wonders why nothing happened */
 #rs-t { min-height: 8.5em; }
+/* ------------------------------------------------- figures that will move
+   Added for build 15. Five of the twelve chapter 3 figures have an animated
+   companion. The still stays on the page exactly as it was and the animation
+   is an offer, not a replacement, so a reader who never taps loses nothing and
+   nothing moves under him while he is trying to read. */
+
+figure.fig.hasanim { position: relative; cursor: pointer; }
+
+/* the offer. It sits on the figure rather than under the caption, because the
+   thing you tap should be the thing that moves. */
+.playtag {
+  /* top right, not bottom right: the figure element includes its caption, so
+     anything anchored to the bottom sits on top of the words. Every figure in
+     this book puts its title at the left, which leaves the top right clear. */
+  position: absolute; right: 8px; top: 8px;
+  display: flex; align-items: center; gap: .5em;
+  padding: 7px 12px 7px 9px; border-radius: 999px;
+  background: var(--bg); border: 1px solid var(--rule-2);
+  box-shadow: 0 1px 3px rgba(20,24,28,.10);
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 13px; font-weight: 600; color: var(--navy);
+  pointer-events: none;            /* the whole figure is the target */
+}
+.playtag .pt-i {
+  display: grid; place-items: center; width: 20px; height: 20px;
+  border-radius: 50%; background: var(--navy); color: var(--bg);
+  font-size: 10px; padding-left: 2px;
+}
+figure.fig.hasanim:active .playtag { background: var(--bg-3); }
+
+/* the panel it opens. The sheet is the book's own, so only the figure inside
+   it needs styling. */
+.animwrap { margin: 2px 0 4px; }
+.animwrap svg { width: 100%; height: auto; display: block; border-radius: 10px; }
+.animwrap .an-note {
+  margin: 10px 0 0; font-size: .86em; color: var(--ink-3); line-height: 1.5;
+}
+
+/* Replay puts the figure back and starts it again, which is the whole reason
+   the animation is cloned rather than shown in place. */
+.an-row { display: flex; gap: 8px; margin-top: 14px; }
+
+@media (prefers-reduced-motion: reduce) {
+  /* the figure inside freezes itself; this is only the label on the offer,
+     which would otherwise promise motion that will not happen */
+  .playtag .pt-l::after { content: " (still)"; font-weight: 400; }
+}
+
+@media print {
+  .playtag { display: none; }
+}
