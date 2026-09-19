@@ -810,8 +810,9 @@
     if (!marks.length) {
       out.push('Nothing marked yet.');
     } else if (!b) {
-      out.push('<b>These ' + marks.length + ' marks exist only on this iPad.</b> ' +
-               'Tap Back up and save the file to iCloud Drive.');
+      out.push('<b>' + (marks.length === 1 ? 'This mark is'
+                        : 'These ' + marks.length + ' marks are') +
+               ' the only copy.</b> Tap Back up to put one in iCloud Drive.');
     } else if (since) {
       out.push('<b>' + since + ' mark' + (since === 1 ? '' : 's') +
                ' since the last backup</b>, which was ' + when(b.ts) + '.');
