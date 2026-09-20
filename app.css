@@ -1068,3 +1068,71 @@ h2.parth + .nv-sec { margin-top: 1em; }
   .witem, .wletter { break-inside: avoid; }
   .wletter { break-after: avoid; }
 }
+/* ------------------------------------------------- where the book is unsure
+
+   The book already says, in words, wherever it is not certain: no source
+   holds the fact, the book is reading a source that does not say it, a figure
+   is illustrative rather than published, or an argument rests on an
+   assumption. This makes those places visible instead of leaving them to be
+   noticed in the middle of a sentence.
+
+   The mark goes on the clause that carries the uncertainty. It never goes on
+   a quotation, on a tagged figure, or on a crew value, because each of those
+   already has its own convention and marking them twice would make the mark
+   mean nothing.
+
+   Colour is not the only signal. The dotted underline is what survives a page
+   printed in grey and a reader who does not separate teal from ink, so the
+   mark still reads without it. The colour is new to the book: navy is a link,
+   brass is a source tag, and the highlight yellow belongs to the reader. */
+
+:root { --uns: #1F6F63; }
+body.t-sepia { --uns: #2B6A5C; }
+body.t-dark { --uns: #6FC3B0; }
+
+.unsure {
+  color: var(--uns);
+  border-bottom: 1px dotted color-mix(in srgb, var(--uns) 70%, transparent);
+}
+
+/* A source tag or a glossary button inside a marked clause keeps its own
+   colour, so the two conventions do not fight. */
+.unsure .tg, .unsure .gl, .unsure .cv { color: inherit; }
+.unsure .tg-s, .unsure .tg-w { color: var(--brass); }
+
+/* In print the colour goes, so the line has to do the work on its own, and a
+   dotted line will not: the glossary button and the crew value are dotted too,
+   so three conventions would look alike. A double rule is the one shape
+   nothing else in the book uses. */
+@media print {
+  .unsure { color: inherit; border-bottom: 3px double #666; }
+}
+
+/* The legend on the About page shows the mark itself rather than describing
+   it, so a reader can match what is in front of them. */
+.unsure-key {
+  display: inline-block; color: var(--uns);
+  border-bottom: 1px dotted color-mix(in srgb, var(--uns) 70%, transparent);
+}
+/* ------------------------------------------------------------- build stamp
+   Added for build 26, after a chapter page opened from a folder on disk could
+   not be told apart from the same chapter on the published site. Until now the
+   cover was the only page that said which build it was, and a reader who opens
+   a chapter file directly, or who taps Contents out of a sample and lands on
+   the site, never passes the cover at all. Every chapter now says it for
+   itself, in the one place a reader always sees: above the chapter title.
+
+   It is deliberately quiet. The stamp is not part of the book and should not
+   compete with the eyebrow above it or the chapter number below it, so it
+   takes the same muted ink as the eyebrow at a smaller size. In print it goes
+   grey rather than disappearing, because a printed chapter has the same
+   problem as a saved one. */
+.bstamp {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: .58em; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--ink-3); margin: -8px 0 16px;
+}
+
+@media print {
+  .bstamp { color: #666; }
+}
