@@ -1115,24 +1115,42 @@ body.t-dark { --uns: #6FC3B0; }
   border-bottom: 1px dotted color-mix(in srgb, var(--uns) 70%, transparent);
 }
 /* ------------------------------------------------------------- build stamp
-   Added for build 26, after a chapter page opened from a folder on disk could
-   not be told apart from the same chapter on the published site. Until now the
-   cover was the only page that said which build it was, and a reader who opens
-   a chapter file directly, or who taps Contents out of a sample and lands on
-   the site, never passes the cover at all. Every chapter now says it for
-   itself, in the one place a reader always sees: above the chapter title.
+   Supersedes bstamp.css, which is left as it was.
 
-   It is deliberately quiet. The stamp is not part of the book and should not
-   compete with the eyebrow above it or the chapter number below it, so it
-   takes the same muted ink as the eyebrow at a smaller size. In print it goes
-   grey rather than disappearing, because a printed chapter has the same
-   problem as a saved one. */
+   Added for build 26, after a chapter page opened from a folder on disk could
+   not be told apart from the same chapter on the published site. Until then
+   the cover was the only page that said which build it was, and a reader who
+   opens a chapter file directly, or who taps Contents out of a sample and
+   lands on the site, never passes the cover at all.
+
+   Build 27 gives the line a second job, which is the more important of the
+   two. Chapters 2 and 3 have been through the accuracy review and carry the
+   uncertainty mark wherever the book is not sure. The other seventeen have
+   not been read that way at all. Without this, a reader who meets teal in
+   chapter 2 and none in chapter 1 concludes that chapter 1 has nothing
+   uncertain in it, when the truth is that nobody has looked yet. The absence
+   of a mark is not evidence, and a book read by someone learning the subject
+   should not let it pass for evidence.
+
+   So an unreviewed chapter says so in amber. The colour is chosen to be the
+   one thing on the page that is neither ink, navy, brass nor teal, and the
+   words carry the meaning on their own for anyone who does not separate it. */
+
+:root { --unrev: #9A5B1E; }
+body.t-sepia { --unrev: #8A4F1A; }
+body.t-dark { --unrev: #D89A54; }
+
 .bstamp {
   font-family: -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: .58em; letter-spacing: .14em; text-transform: uppercase;
   color: var(--ink-3); margin: -8px 0 16px;
 }
 
+.bstamp-un { color: var(--unrev); font-weight: 600; }
+
+/* A printed chapter has the same problem as a saved one, and in grey the
+   amber goes, so the weight is what carries it there. */
 @media print {
   .bstamp { color: #666; }
+  .bstamp-un { color: #000; font-weight: 700; }
 }
