@@ -1,0 +1,1156 @@
+/* Advanced Olympic 49er Sailing Theory — reading layer.
+   Tuned for the 13-inch iPad Pro: one column, a measure near 68 characters,
+   type large enough to read at arm's length on a boat park. */
+
+:root {
+  --fs: 20px;
+  --measure: 33em;
+  --ink: #15181C;
+  --ink-2: #4A5560;
+  --ink-3: #6E7B87;
+  --navy: #0F3D5E;
+  --navy-2: #1E5C86;
+  --brass: #9A7B3F;
+  --bg: #FAFAF7;
+  --bg-2: #F1F0EA;
+  --bg-3: #E6E5DE;
+  --rule: #D8D6CD;
+  --rule-2: #C2BFB4;
+  --mark: #FCE49A;
+  --mark-2: #F7D571;
+  --sh: 0 1px 2px rgba(20,24,28,.06), 0 8px 28px rgba(20,24,28,.12);
+  --radius: 14px;
+}
+
+body.t-sepia {
+  --ink: #241E15; --ink-2: #574B3B; --ink-3: #7A6B58;
+  --bg: #F6EEDF; --bg-2: #EFE4CF; --bg-3: #E5D7BE;
+  --rule: #DDCDB0; --rule-2: #C9B591; --navy: #1D4258; --navy-2: #2B5F7E;
+}
+
+body.t-dark {
+  --ink: #E8EAED; --ink-2: #A9B2BC; --ink-3: #838E99;
+  --navy: #8FC4E8; --navy-2: #A9D3F0; --brass: #D3B172;
+  --bg: #14171B; --bg-2: #1C2026; --bg-3: #262B32;
+  --rule: #2E343C; --rule-2: #3D454F;
+  --mark: #5A4A17; --mark-2: #7A6520;
+  --sh: 0 1px 2px rgba(0,0,0,.5), 0 8px 28px rgba(0,0,0,.55);
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html { background: var(--bg); }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: Charter, "Bitstream Charter", Georgia, "Times New Roman", serif;
+  font-size: var(--fs);
+  line-height: 1.58;
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+}
+
+/* ------------------------------------------------------------------ bar */
+.bar {
+  position: sticky; top: 0; z-index: 40;
+  display: flex; align-items: center; gap: 10px;
+  padding: max(8px, env(safe-area-inset-top)) 16px 8px;
+  padding-left: max(16px, env(safe-area-inset-left));
+  padding-right: max(16px, env(safe-area-inset-right));
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  -webkit-backdrop-filter: saturate(180%) blur(14px);
+  backdrop-filter: saturate(180%) blur(14px);
+  border-bottom: 1px solid var(--rule);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+.bar-t {
+  flex: 1; min-width: 0; text-align: center;
+  font-size: .72em; letter-spacing: .04em; color: var(--ink-3);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.bar-r { display: flex; gap: 8px; }
+.bar-b {
+  appearance: none; border: 1px solid var(--rule-2); background: var(--bg-2);
+  color: var(--navy); border-radius: 999px; padding: 7px 14px;
+  font: inherit; font-size: .7em; font-weight: 600; letter-spacing: .01em;
+  text-decoration: none; cursor: pointer; white-space: nowrap;
+}
+.bar-b:active { background: var(--bg-3); }
+
+/* ---------------------------------------------------------------- layout */
+.wrap {
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: 34px max(22px, env(safe-area-inset-left)) 120px max(22px, env(safe-area-inset-right));
+}
+
+p { margin: 0 0 .85em; }
+a { color: var(--navy); }
+
+.eyebrow {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: .62em; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--ink-3); margin: 0 0 14px;
+}
+
+h1 {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 1.92em; line-height: 1.14; font-weight: 700; letter-spacing: -.018em;
+  color: var(--navy); margin: 0 0 .1em;
+}
+h1.big { font-size: 2.1em; }
+.chnum { display: block; font-size: .48em; letter-spacing: .12em; color: var(--brass); margin-bottom: .5em; }
+
+.chhead { display: flex; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
+.chhead h1 { flex: 1 1 14em; min-width: 0; }
+
+.sub { color: var(--ink-2); font-size: .88em; line-height: 1.55; }
+
+/* -------------------------------------------------------------- sections */
+.chintro { color: var(--ink-2); font-size: .95em; }
+.chintro p:first-child { font-size: 1.02em; }
+
+.sec { margin: 2.6em 0 0; scroll-margin-top: 72px; }
+.sec h2 {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 1.12em; line-height: 1.3; font-weight: 700; color: var(--navy);
+  margin: 0 0 .85em; padding-top: .85em; border-top: 2px solid var(--navy);
+  display: flex; gap: .7em; align-items: baseline;
+}
+.secnum { flex: none; color: var(--brass); font-variant-numeric: tabular-nums; }
+.sectitle { flex: 1; }
+
+h2.parth {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 1em; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--ink-3); margin: 2.2em 0 .8em;
+  padding-bottom: .5em; border-bottom: 1px solid var(--rule);
+}
+
+/* run-in headings: the fourth level six chapters use */
+p.lead { margin-top: 1.7em; }
+.leadnum {
+  display: block; font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: .62em; letter-spacing: .12em; color: var(--brass); margin-bottom: .25em;
+  font-weight: 700;
+}
+.leadtitle { color: var(--navy); }
+.leadtitle::after { content: " "; }
+
+/* ------------------------------------------------------------------ tags */
+.tg {
+  display: inline-block; vertical-align: .18em;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: .56em; font-weight: 700; letter-spacing: .03em; line-height: 1.55;
+  padding: 0 .5em; margin: 0 0 0 .18em; border-radius: 999px;
+  text-decoration: none; white-space: nowrap; cursor: pointer;
+}
+.tg-s { color: var(--navy-2); background: color-mix(in srgb, var(--navy) 11%, transparent); }
+.tg-w { color: var(--brass); background: color-mix(in srgb, var(--brass) 15%, transparent); }
+.tg:active { filter: brightness(.92); }
+.tg-def { vertical-align: baseline; font-size: .62em; margin-right: .35em; }
+
+.cv {
+  font-style: italic; color: var(--ink-3);
+  border-bottom: 1px dotted var(--rule-2); white-space: nowrap;
+}
+
+/* ------------------------------------------------- explanation panels */
+/* a term the reader can open: quiet enough to read past, clear enough to find */
+.gl {
+  appearance: none; background: none; border: 0; padding: 0; margin: 0;
+  font: inherit; color: inherit; cursor: pointer; text-align: left;
+  border-bottom: 1.5px dotted color-mix(in srgb, var(--navy) 55%, transparent);
+}
+.gl:active { background: color-mix(in srgb, var(--navy) 9%, transparent); }
+
+/* a passage whose mechanism is unpacked in place */
+.lm { border-bottom: 1.5px dotted color-mix(in srgb, var(--brass) 75%, transparent); }
+.lmb {
+  appearance: none; cursor: pointer; border: 0; margin: 0 0 0 .3em; padding: 0 .5em;
+  vertical-align: .18em; border-radius: 999px;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: .56em; font-weight: 700; letter-spacing: .04em; line-height: 1.55;
+  text-transform: uppercase;
+  color: var(--brass); background: color-mix(in srgb, var(--brass) 16%, transparent);
+}
+.lmb:active { filter: brightness(.92); }
+
+.gitem {
+  margin: 0 0 1.6em; padding: 0 0 1.4em; border-bottom: 1px solid var(--rule);
+  scroll-margin-top: 76px;
+}
+.gitem h3 {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 1em; font-weight: 700; color: var(--navy); margin: 0 0 .5em;
+}
+.gitem p { font-size: .92em; }
+.gitem:target { background: color-mix(in srgb, var(--mark) 40%, transparent);
+  border-radius: 8px; padding: .8em; }
+
+/* --------------------------------------------------------------- tables */
+.tscroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 1.2em 0 1.5em; }
+table { border-collapse: collapse; font-size: .74em; line-height: 1.42; min-width: 100%; }
+th {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: .88em; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
+  color: var(--navy); text-align: left; vertical-align: bottom;
+  padding: 0 .9em .6em; border-bottom: 2px solid var(--navy); white-space: nowrap;
+}
+td { padding: .62em .9em; vertical-align: top; border-bottom: 1px solid var(--rule); min-width: 8em; }
+tbody tr:nth-child(even) td { background: var(--bg-2); }
+td:first-child, th:first-child { padding-left: 0; }
+td:first-child { font-weight: 600; color: var(--navy); }
+
+ol, ul { margin: 0 0 1em; padding-left: 1.5em; }
+li { margin: 0 0 .55em; }
+
+/* -------------------------------------------------------------- contents */
+.chlist { list-style: none; margin: 0; padding: 0; }
+.chrow { margin: 0 0 2px; }
+.chlink {
+  display: flex; gap: .8em; align-items: baseline; text-decoration: none;
+  padding: .7em .2em; color: var(--ink); border-bottom: 1px solid var(--rule);
+}
+.chlink .chnum {
+  display: inline-block; margin: 0; flex: none; width: 1.8em;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: .8em; font-weight: 700; color: var(--brass); letter-spacing: 0;
+}
+.subs { margin: 0 0 .6em 2.6em; }
+.subs summary, .secnav summary {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: .68em; color: var(--ink-3); cursor: pointer; padding: .4em 0; list-style: none;
+}
+.subs summary::-webkit-details-marker, .secnav summary::-webkit-details-marker { display: none; }
+.subs summary::before, .secnav summary::before { content: "▸ "; }
+.subs[open] summary::before, .secnav[open] summary::before { content: "▾ "; }
+.seclist, .secnav-l { list-style: none; margin: .2em 0 .8em; padding: 0; }
+.seclist li, .secnav-l li { margin: 0; }
+.seclist a, .secnav-l a {
+  display: flex; gap: .7em; text-decoration: none; color: var(--ink-2);
+  font-size: .82em; padding: .4em 0; border-bottom: 1px solid var(--bg-3);
+}
+.seclist .n, .secnav-l .n {
+  flex: none; width: 3.2em; color: var(--brass); font-variant-numeric: tabular-nums;
+}
+.secnav { margin: 1.4em 0 0; padding: .6em 0 0; border-top: 1px solid var(--rule); }
+
+/* --------------------------------------------------------------- sources */
+.srcitem {
+  margin: 0 0 1em; padding: 0 0 1em; border-bottom: 1px solid var(--rule);
+  font-size: .88em; scroll-margin-top: 76px;
+}
+.srcitem:target { background: color-mix(in srgb, var(--mark) 45%, transparent); border-radius: 8px; padding: .6em; }
+.sus { margin-top: .35em; }
+a.su, a.ext {
+  display: block; font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: .82em; color: var(--ink-3); word-break: break-all; line-height: 1.4;
+}
+
+/* ----------------------------------------------------------- ask button */
+.askbtn {
+  flex: none; display: inline-flex; align-items: center; gap: .5em;
+  appearance: none; cursor: pointer;
+  border: 1px solid color-mix(in srgb, var(--navy) 35%, transparent);
+  background: color-mix(in srgb, var(--navy) 8%, transparent);
+  color: var(--navy); border-radius: 999px; padding: .5em 1em;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: .66em; font-weight: 600; margin-top: .6em;
+}
+.askbtn:active { background: color-mix(in srgb, var(--navy) 16%, transparent); }
+.askbtn-i {
+  display: grid; place-items: center; width: 1.5em; height: 1.5em; border-radius: 50%;
+  background: var(--navy); color: var(--bg); font-weight: 700; font-size: .85em;
+}
+.askbtn.has { border-color: var(--brass); background: color-mix(in srgb, var(--brass) 16%, transparent); color: var(--brass); }
+.askbtn.has .askbtn-i { background: var(--brass); }
+
+/* spoken walkthrough */
+.tourbtn {
+  display: flex; align-items: center; justify-content: center; gap: .7em;
+  width: 100%; appearance: none; cursor: pointer;
+  background: #F5C947; border: 1px solid #D9A81F; color: #2A1F00;
+  border-radius: 14px; padding: .95em 1.2em; margin: 0 0 26px;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: .84em; font-weight: 700; letter-spacing: .02em;
+  box-shadow: 0 1px 0 rgba(255,255,255,.45) inset, 0 2px 10px rgba(180,130,0,.22);
+}
+body.t-dark .tourbtn { background: #E7BA3A; border-color: #A8811A; color: #241A00; }
+.tourbtn:active { filter: brightness(.95); }
+.tourbtn-i {
+  display: grid; place-items: center; width: 1.7em; height: 1.7em; border-radius: 50%;
+  background: rgba(42,31,0,.14); font-size: .8em; padding-left: .12em;
+}
+.tourbtn.playing { background: #2A1F00; border-color: #2A1F00; color: #F5C947; }
+.tourbtn.playing .tourbtn-i { background: rgba(245,201,71,.2); }
+
+.pager { display: flex; justify-content: space-between; gap: 12px; margin: 3.5em 0 0; padding-top: 1.2em; border-top: 1px solid var(--rule); }
+.pn {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif; font-size: .72em;
+  text-decoration: none; color: var(--navy); max-width: 46%;
+}
+
+/* ------------------------------------------------------------- marked up */
+mark.hl {
+  background: var(--mark); color: inherit; border-radius: 3px;
+  padding: .06em 0; cursor: pointer;
+  box-decoration-break: clone; -webkit-box-decoration-break: clone;
+}
+mark.hl.has-note { border-bottom: 2px solid var(--brass); }
+mark.hl.is-request { background: none; border-bottom: 2px dashed var(--navy-2); }
+
+/* --------------------------------------------------------------- floats */
+.seltool {
+  position: fixed; z-index: 60; display: none; gap: 2px; padding: 4px;
+  background: var(--ink); border-radius: 12px; box-shadow: var(--sh);
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+.seltool.on { display: flex; }
+.seltool button {
+  appearance: none; border: 0; background: none; color: #fff; cursor: pointer;
+  font: inherit; font-size: 13px; font-weight: 600; padding: 8px 12px; border-radius: 9px;
+}
+.seltool button:active { background: rgba(255,255,255,.18); }
+
+.scrim {
+  position: fixed; inset: 0; z-index: 70; background: rgba(10,16,24,.42);
+  display: none; align-items: flex-end; justify-content: center;
+  -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px);
+}
+.scrim.on { display: flex; }
+.sheet {
+  width: min(620px, 100%); max-height: 84vh; overflow-y: auto;
+  background: var(--bg); border-radius: 20px 20px 0 0; box-shadow: var(--sh);
+  padding: 20px 22px calc(22px + env(safe-area-inset-bottom));
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif; font-size: .82em;
+}
+@media (min-width: 700px) {
+  .scrim { align-items: center; }
+  .sheet { border-radius: 20px; }
+}
+.sheet h3 { margin: 0 0 4px; font-size: 1.15em; color: var(--navy); }
+.sheet .meta { color: var(--ink-3); font-size: .88em; margin: 0 0 14px; }
+.sheet .quote {
+  border-left: 3px solid var(--mark-2); padding: 2px 0 2px 12px; margin: 0 0 14px;
+  color: var(--ink-2); font-family: Charter, Georgia, serif; font-size: 1em;
+  max-height: 9em; overflow: hidden;
+}
+.sheet label { display: block; font-weight: 600; margin: 14px 0 6px; font-size: .92em; }
+.sheet textarea, .sheet input[type=text] {
+  width: 100%; font: inherit; font-size: 1em; padding: 10px 12px; border-radius: 10px;
+  border: 1px solid var(--rule-2); background: var(--bg-2); color: var(--ink); resize: vertical;
+}
+.sheet textarea { min-height: 5em; }
+.sheet select {
+  width: 100%; font: inherit; font-size: 1em; padding: 11px 12px; border-radius: 10px;
+  border: 1px solid var(--rule-2); background: var(--bg-2); color: var(--ink);
+  appearance: none; -webkit-appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--ink-3) 50%),
+                    linear-gradient(135deg, var(--ink-3) 50%, transparent 50%);
+  background-position: calc(100% - 19px) 1.15em, calc(100% - 13px) 1.15em;
+  background-size: 6px 6px, 6px 6px; background-repeat: no-repeat;
+  padding-right: 38px;
+}
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  appearance: none; cursor: pointer; font: inherit; font-size: .92em;
+  border: 1px solid var(--rule-2); background: var(--bg-2); color: var(--ink-2);
+  border-radius: 999px; padding: 8px 14px;
+}
+.chip[aria-pressed=true] { background: var(--navy); border-color: var(--navy); color: var(--bg); font-weight: 600; }
+.row { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+.btn {
+  appearance: none; cursor: pointer; font: inherit; font-size: .95em; font-weight: 600;
+  border: 1px solid var(--rule-2); background: var(--bg-2); color: var(--ink);
+  border-radius: 11px; padding: 11px 18px;
+}
+.btn-p { background: var(--navy); border-color: var(--navy); color: #fff; }
+.btn-d { color: #B3261E; border-color: color-mix(in srgb, #B3261E 35%, transparent); }
+.row .btn { flex: 1 1 auto; }
+.spacer { flex: 1; }
+
+/* reading settings */
+.setrow { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin: 18px 0; }
+.seg { display: flex; gap: 6px; }
+.seg button {
+  appearance: none; cursor: pointer; font: inherit; font-weight: 600;
+  border: 1px solid var(--rule-2); background: var(--bg-2); color: var(--ink-2);
+  border-radius: 10px; padding: 9px 14px; min-width: 44px;
+}
+.seg button[aria-pressed=true] { background: var(--navy); border-color: var(--navy); color: #fff; }
+
+/* ----------------------------------------------------------- marks page */
+.marks-tools { display: flex; gap: 10px; margin: 0 0 22px; flex-wrap: wrap;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif; font-size: .8em; }
+.marks-list { font-family: -apple-system, BlinkMacSystemFont, sans-serif; font-size: .82em; }
+.mk {
+  border: 1px solid var(--rule); border-radius: var(--radius); padding: 14px 16px;
+  margin: 0 0 12px; background: var(--bg-2);
+}
+.mk-h { display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
+.mk-s { font-weight: 700; color: var(--brass); font-variant-numeric: tabular-nums; }
+.mk-c { color: var(--ink-3); font-size: .92em; flex: 1; min-width: 0; }
+.mk-k {
+  font-size: .78em; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
+  padding: 2px 8px; border-radius: 999px; background: var(--bg-3); color: var(--ink-2);
+}
+.mk-k.request { background: color-mix(in srgb, var(--navy) 14%, transparent); color: var(--navy); }
+.mk-q {
+  font-family: Charter, Georgia, serif; font-size: 1.08em; color: var(--ink);
+  border-left: 3px solid var(--mark-2); padding-left: 12px; margin: 0 0 8px;
+}
+.mk-n { color: var(--ink-2); margin: 8px 0 0; }
+.mk-n b { color: var(--navy); }
+.mk-a { display: flex; gap: 8px; margin-top: 12px; }
+.mk-a button, .mk-a a {
+  appearance: none; cursor: pointer; font: inherit; font-size: .9em; text-decoration: none;
+  border: 1px solid var(--rule-2); background: var(--bg); color: var(--ink-2);
+  border-radius: 9px; padding: 7px 12px;
+}
+.empty { color: var(--ink-3); text-align: center; padding: 40px 0; }
+
+.toast {
+  position: fixed; left: 50%; bottom: calc(28px + env(safe-area-inset-bottom));
+  transform: translateX(-50%); z-index: 90;
+  background: var(--ink); color: var(--bg); padding: 12px 20px; border-radius: 999px;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif; font-size: 14px; font-weight: 600;
+  box-shadow: var(--sh); opacity: 0; pointer-events: none; transition: opacity .18s;
+}
+.toast.on { opacity: 1; }
+
+@media print {
+  .bar, .seltool, .scrim, .askbtn, .pager, .secnav { display: none !important; }
+}
+/* ------------------------------------------------ figures, photos and hooks
+   Added for build 9, after Conrad's note that the book needed to be more
+   visual and that it reads heavy over a long session. These rules only add;
+   nothing above them is changed. */
+
+.fig {
+  margin: 1.9em calc(-1 * var(--fig-bleed, 0px)) 1.6em;
+  padding: 0;
+}
+.fig svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  background: #F6F4EF;
+}
+.fig img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+.fig figcaption {
+  margin: .7em 2px 0;
+  font-size: .855em;
+  line-height: 1.48;
+  color: var(--ink-3);
+  letter-spacing: .002em;
+}
+.fig figcaption b { color: var(--ink-2); font-weight: 650; }
+
+/* A photograph that has not been taken yet. It says exactly what the shot is,
+   so the slot is an instruction rather than a hole. */
+.photoslot .slot {
+  border: 1px dashed var(--rule-2);
+  border-radius: 10px;
+  padding: 16px 16px 15px;
+  background: color-mix(in srgb, var(--brass) 5%, transparent);
+}
+@supports not (background: color-mix(in srgb, red 5%, transparent)) {
+  .photoslot .slot { background: rgba(160, 120, 40, .045); }
+}
+.slot-k {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: .66em; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--brass); margin-bottom: 7px;
+}
+.slot-t { font-weight: 650; color: var(--ink); margin-bottom: 5px; }
+.slot-s { font-size: .885em; line-height: 1.5; color: var(--ink-2); }
+.slot-f { font-size: .8em; line-height: 1.5; color: var(--ink-3); margin-top: 9px; }
+.slot-f code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: .92em; background: var(--rule); padding: 1px 5px; border-radius: 4px;
+}
+
+/* The hook: the moment on the water that the section explains. It is the
+   change of pace, so it is set differently from the body and given air. */
+.hook {
+  margin: .2em 0 1.5em;
+  padding: 0 0 0 16px;
+  border-left: 2.5px solid var(--brass);
+  font-size: 1.035em;
+  line-height: 1.58;
+  color: var(--ink-2);
+  font-style: italic;
+  letter-spacing: -.003em;
+}
+.hook::first-letter { font-style: normal; }
+
+@media (min-width: 760px) {
+  .fig { --fig-bleed: 34px; }
+}
+@media print {
+  .fig { break-inside: avoid; }
+  .photoslot { display: none; }
+}
+/* ------------------------------------------------------- moving about
+   Added for build 10, after Conrad asked for it to be easier to go back and
+   forth. A chapter page is around 29,000 pixels tall; before this the only
+   section list was collapsed at the very top and the chapter links were at the
+   very bottom, so getting from 3.7 back to 3.2 meant scrolling the whole way.
+   These rules only add; nothing above them is changed. */
+
+/* the chapter title in the sticky bar becomes the way in */
+button.bar-t {
+  appearance: none; border: 0; background: none; font: inherit;
+  cursor: pointer; padding: 6px 10px; border-radius: 999px;
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+}
+button.bar-t:active { background: var(--bg-3); }
+.bar-t .where {
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.bar-t .caret { flex: none; opacity: .5; font-size: .9em; }
+.bar-t .now { color: var(--brass); font-variant-numeric: tabular-nums; }
+
+/* the sheet it opens */
+.jump h3 { margin: 0 0 12px; }
+.jump-l { list-style: none; margin: 0; padding: 0; }
+.jump-l li { margin: 0; }
+.jump-l a {
+  display: flex; gap: .85em; align-items: baseline; text-decoration: none;
+  color: var(--ink); padding: 11px 10px; border-radius: 9px; line-height: 1.35;
+}
+.jump-l a:active { background: var(--bg-3); }
+.jump-l a.on { background: color-mix(in srgb, var(--brass) 12%, transparent); }
+@supports not (background: color-mix(in srgb, red 12%, transparent)) {
+  .jump-l a.on { background: rgba(160, 120, 40, .12); }
+}
+.jump-l .n {
+  flex: none; min-width: 2.6em; color: var(--brass); font-weight: 650;
+  font-variant-numeric: tabular-nums; font-size: .92em;
+}
+.jump-rule {
+  margin: 12px 0; border: 0; border-top: 1px solid var(--rule);
+}
+.jump-x { display: flex; gap: 8px; }
+.jump-x a {
+  flex: 1; text-align: center; text-decoration: none; color: var(--navy);
+  border: 1px solid var(--rule-2); background: var(--bg-2); border-radius: 9px;
+  padding: 11px 10px; font-size: .9em; font-weight: 600;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.jump-x a:active { background: var(--bg-3); }
+.jump-x a.none { opacity: .38; pointer-events: none; }
+
+/* a thin line across the top of the bar showing how far through the chapter
+   the reader is, so the length of what is left is visible rather than guessed */
+.prog {
+  position: fixed; left: 0; top: 0; height: 2px; z-index: 50;
+  background: var(--brass); width: 0;
+  transition: width .08s linear;
+}
+
+@media print {
+  .prog { display: none; }
+}
+/* ------------------------------------------------------ highlight palette
+   Added for build 11. Until now a highlight was one colour and said only
+   "this bit". Four colours let a mark carry a meaning, so the exported list
+   separates what the reader did not understand from what he disagreed with:
+
+     yellow = important, remember this
+     blue   = do not understand this yet
+     green  = agreed, this matches what we do
+     red    = disagree, or wrong for our boat
+
+   The values sit on a deliberate lightness ladder, yellow lightest, then
+   green, then red, so red and green stay apart for a reader with deuteranopia
+   or protanopia, where hue alone collapses. Green is pulled towards sea-green
+   so its residual chroma stays cool rather than falling in with yellow.
+
+   Every text-on-mark contrast was computed rather than judged by eye. The
+   worst is 5.94:1, sepia red, against a threshold of 4.5:1. */
+
+:root {
+  --mk-yellow: #FCE49A;   /* the same value as --mark, so marks saved before
+                             this change are indistinguishable from new ones */
+  --mk-blue:   #B8CEF0;
+  --mk-green:  #A1DEC9;
+  --mk-red:    #DC8A88;
+  --mk-note:   #584A2E;
+}
+
+body.t-sepia {
+  --mk-yellow: #F3DB98;   /* a shade deeper, so it still shows on cream */
+  --mk-blue:   #B1C8EB;
+  --mk-green:  #9BD8C5;
+  --mk-red:    #D68584;
+  --mk-note:   #594828;
+}
+
+body.t-dark {
+  --mk-yellow: #5A4A17;   /* the same value as --mark in this theme */
+  --mk-blue:   #1A3B5A;
+  --mk-green:  #1A4A3D;
+  --mk-red:    #52171D;
+  --mk-note:   #D3B172;
+}
+
+/* --------------------------------------------------------- the marks
+   A mark saved before this change carries no data-k, so --mk falls back to
+   --mark and it renders exactly as it did. */
+mark.hl                  { --mk: var(--mark); background: var(--mk); }
+mark.hl[data-k="yellow"] { --mk: var(--mk-yellow); }
+mark.hl[data-k="blue"]   { --mk: var(--mk-blue); }
+mark.hl[data-k="green"]  { --mk: var(--mk-green); }
+mark.hl[data-k="red"]    { --mk: var(--mk-red); }
+
+/* A mark that carries a note keeps its brass underline, darkened: plain
+   --brass reaches only 1.8:1 on the red and vanishes into it. */
+mark.hl.has-note { border-bottom: 2px solid var(--mk-note); }
+
+/* A request with no colour behaves exactly as before: no background, dashed
+   navy underline. With a colour, wiping the background would throw the
+   meaning away, so the colour stays as a wash and the dashes sit on it. */
+mark.hl.is-request[data-k] {
+  background: color-mix(in srgb, var(--mk) 42%, transparent);
+}
+@supports not (background: color-mix(in srgb, red 42%, transparent)) {
+  mark.hl.is-request[data-k] { background: none; }
+}
+
+/* Both at once. The two border-bottom declarations collide, so the note
+   signal needs a line of its own rather than losing silently. */
+mark.hl.has-note.is-request {
+  border-bottom: 2px dashed var(--navy-2);
+  text-decoration: underline;
+  -webkit-text-decoration-color: var(--mk-note);
+  text-decoration-color: var(--mk-note);
+  text-decoration-thickness: 2px;
+  text-underline-offset: .16em;
+  text-decoration-skip-ink: none;
+}
+
+/* ----------------------------------- the colour dots in the selection tool
+   Each dot is painted in the colour it applies, which is also what makes it
+   legible: the toolbar's background is var(--ink), so a dot's contrast
+   against it is the same number that keeps text readable on the mark. The
+   ::after widens the tap target to 36px without changing the circle, for
+   cold hands on a boat park. */
+.seltool .dots {
+  display: flex; align-items: center; gap: 7px;
+  padding: 0 8px; margin-left: 2px;
+  border-left: 1px solid rgba(127,127,127,.4);
+}
+.seltool .dot {
+  position: relative;
+  appearance: none; -webkit-appearance: none; border: 0; padding: 0; margin: 0;
+  width: 22px; height: 22px; border-radius: 50%;
+  cursor: pointer; flex: none;
+  --mk: var(--mark);
+  background: var(--mk);
+  box-shadow: inset 0 0 0 1px rgba(127,127,127,.5);
+}
+.seltool .dot::after { content: ""; position: absolute; inset: -7px; }
+.seltool .dot[data-k="yellow"] { --mk: var(--mk-yellow); }
+.seltool .dot[data-k="blue"]   { --mk: var(--mk-blue); }
+.seltool .dot[data-k="green"]  { --mk: var(--mk-green); }
+.seltool .dot[data-k="red"]    { --mk: var(--mk-red); }
+.seltool .dot:active { transform: scale(.86); }
+
+/* Pre-existing and unrelated to the palette, but found while measuring the
+   dots: in the dark theme the toolbar's background is var(--ink), which is
+   #E8EAED, while its buttons are #fff. White on near-white, 1.21:1. The dots
+   are fine either way because they are always measured against --ink; the
+   words were not. */
+body.t-dark .seltool button { color: var(--bg); }
+
+/* ------------------------------------------- the colour on the marks page */
+.mk-dot {
+  display: inline-block; width: 11px; height: 11px; border-radius: 50%;
+  margin-right: .45em; vertical-align: -1px; flex: none;
+  box-shadow: inset 0 0 0 1px rgba(127,127,127,.45);
+  background: var(--mark);
+}
+.mk-dot[data-k="yellow"] { background: var(--mk-yellow); }
+.mk-dot[data-k="blue"]   { background: var(--mk-blue); }
+.mk-dot[data-k="green"]  { background: var(--mk-green); }
+.mk-dot[data-k="red"]    { background: var(--mk-red); }
+
+.mk-key {
+  display: flex; flex-wrap: wrap; gap: .35em 1.3em;
+  margin: 0 0 18px; padding: 12px 14px;
+  border: 1px solid var(--rule); border-radius: 10px; background: var(--bg-2);
+  font-size: .86em; color: var(--ink-2);
+}
+.mk-key span { display: flex; align-items: center; white-space: nowrap; }
+
+/* the colour row inside a mark's own sheet */
+.kpick { display: flex; gap: 10px; margin: 2px 0 6px; }
+.kpick button {
+  appearance: none; border: 0; padding: 0; cursor: pointer;
+  width: 30px; height: 30px; border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgba(127,127,127,.5);
+  background: var(--mark);
+}
+.kpick button[data-k="yellow"] { background: var(--mk-yellow); }
+.kpick button[data-k="blue"]   { background: var(--mk-blue); }
+.kpick button[data-k="green"]  { background: var(--mk-green); }
+.kpick button[data-k="red"]    { background: var(--mk-red); }
+.kpick button[aria-pressed="true"] {
+  box-shadow: inset 0 0 0 1px rgba(127,127,127,.5), 0 0 0 3px var(--navy);
+}
+/* ------------------------------------------------------- backup and restore
+   Added for build 12. The one line that matters here is mk-state: it is the
+   only place the reader is told whether his marks exist anywhere but on the
+   iPad in his hands, so it sits above the list rather than below it and it is
+   never silent. */
+
+.mk-state {
+  margin: 0 0 16px;
+  padding: 11px 14px;
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--brass);
+  border-radius: 8px;
+  background: var(--bg-2);
+  font-size: .9em;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+.mk-state:empty { display: none; }
+.mk-state b { color: var(--ink); font-weight: 650; }
+.mk-state .warn { display: block; margin-top: .4em; color: var(--ink); }
+
+/* the picker is driven by the button in the restore sheet, never shown */
+#mk-file { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+
+/* the restore sheet's paste box wants to be obviously big enough for a whole
+   email, or the reader pastes one line of it and wonders why nothing happened */
+#rs-t { min-height: 8.5em; }
+/* ------------------------------------------------- figures that will move
+   Added for build 15. Five of the twelve chapter 3 figures have an animated
+   companion. The still stays on the page exactly as it was and the animation
+   is an offer, not a replacement, so a reader who never taps loses nothing and
+   nothing moves under him while he is trying to read. */
+
+figure.fig.hasanim { position: relative; cursor: pointer; }
+
+/* the offer. It sits on the figure rather than under the caption, because the
+   thing you tap should be the thing that moves. */
+.playtag {
+  /* top right, not bottom right: the figure element includes its caption, so
+     anything anchored to the bottom sits on top of the words. Every figure in
+     this book puts its title at the left, which leaves the top right clear. */
+  position: absolute; right: 8px; top: 8px;
+  display: flex; align-items: center; gap: .5em;
+  padding: 7px 12px 7px 9px; border-radius: 999px;
+  background: var(--bg); border: 1px solid var(--rule-2);
+  box-shadow: 0 1px 3px rgba(20,24,28,.10);
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 13px; font-weight: 600; color: var(--navy);
+  pointer-events: none;            /* the whole figure is the target */
+}
+.playtag .pt-i {
+  display: grid; place-items: center; width: 20px; height: 20px;
+  border-radius: 50%; background: var(--navy); color: var(--bg);
+  font-size: 10px; padding-left: 2px;
+}
+figure.fig.hasanim:active .playtag { background: var(--bg-3); }
+
+/* the panel it opens. The sheet is the book's own, so only the figure inside
+   it needs styling. */
+.animwrap { margin: 2px 0 4px; }
+.animwrap svg { width: 100%; height: auto; display: block; border-radius: 10px; }
+.animwrap .an-note {
+  margin: 10px 0 0; font-size: .86em; color: var(--ink-3); line-height: 1.5;
+}
+
+/* Replay puts the figure back and starts it again, which is the whole reason
+   the animation is cloned rather than shown in place. */
+.an-row { display: flex; gap: 8px; margin-top: 14px; }
+
+@media (prefers-reduced-motion: reduce) {
+  /* the figure inside freezes itself; this is only the label on the offer,
+     which would otherwise promise motion that will not happen */
+  .playtag .pt-l::after { content: " (still)"; font-weight: 400; }
+}
+
+@media print {
+  .playtag { display: none; }
+}
+/* ---------------------------------------------------------- the notes view
+   Added for build 16. Conrad asked for the highlighted areas to come together
+   on one page so he could see everything highlighted at once, reading as a
+   page of notes rather than a stack of cards. The cards are still there and
+   are still where a mark is edited or deleted; this is the one for reading.
+
+   The washes are not new colours. They are the same four tokens marks.css
+   defines, and marks.css redefines all four for the sepia and dark themes, so
+   a passage lifted onto this page is the colour it is in the book in whichever
+   theme he is reading. --mk-note is the same token a marked note already uses.
+
+   Every text-on-colour pair here was computed rather than judged by eye, by
+   contrast_notes.py, over all three themes and the palette printing forces:
+   60 pairs, all above the book's 4.5:1 standard for body text, the worst of
+   them 5.94:1, which is the sepia red and is the same worst case marks.css
+   already carries. --ink-3 is deliberately not used for any of this text: it
+   reaches only 4.14:1 on the light background and 4.47:1 on sepia. */
+
+/* -------------------------------------------------------- the view switch
+   A .seg, so it is the control the reading settings already use, sized to
+   stand level with the .btn buttons it shares the tools row with rather than
+   sitting a couple of pixels short of them. */
+.mk-view { flex: none; gap: 0; }
+.mk-view button {
+  font-size: .95em;
+  padding: 11px 17px;
+  border-radius: 0;
+  margin-left: -1px;
+  position: relative;
+}
+.mk-view button:first-child {
+  border-radius: 11px 0 0 11px;
+  margin-left: 0;
+}
+.mk-view button:last-child { border-radius: 0 11px 11px 0; }
+/* app.css paints a pressed .seg button white on var(--navy), and in the dark
+   theme --navy is a pale blue, so that is white on near-white. The page's own
+   background is the right ink for it, and is right in all three themes:
+   10.86:1 light, 9.23:1 sepia, 9.61:1 dark. The existing controls that do the
+   same thing are left alone; this is a new one and need not inherit it. */
+.mk-view button[aria-pressed="true"] { color: var(--bg); z-index: 1; }
+
+/* ------------------------------------------------------- section headings
+   Light, because the reader is here for the passages, not the apparatus. The
+   number keeps the brass and the tabular figures it wears in the book. */
+.nv-sec {
+  display: flex; gap: .7em; align-items: baseline;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: .94em; font-weight: 600; line-height: 1.35;
+  color: var(--ink-2);
+  margin: 1.9em 0 .7em;
+}
+.nv-sec .nv-secn {
+  flex: none; color: var(--brass); font-variant-numeric: tabular-nums;
+}
+.nv-sec .nv-sect { min-width: 0; }
+h2.parth + .nv-sec { margin-top: 1em; }
+
+/* -------------------------------------------------------------- a passage
+   Set in the book's serif at the book's size, so it reads as the sentence it
+   was rather than as an entry in a list. It is a link to where it sits in the
+   book and must not look like one: the reader is reading, not choosing. */
+.nv-q {
+  display: block;
+  font-family: Charter, "Bitstream Charter", Georgia, "Times New Roman", serif;
+  font-size: 1.22em;
+  line-height: 1.6;
+  color: var(--ink);
+  text-decoration: none;
+  margin: 0 0 .5em;
+  padding: .32em .5em;
+  border-radius: 4px;
+  --mk: var(--mark);
+  background: var(--mk);
+}
+.nv-q[data-k="yellow"] { --mk: var(--mk-yellow); }
+.nv-q[data-k="blue"]   { --mk: var(--mk-blue); }
+.nv-q[data-k="green"]  { --mk: var(--mk-green); }
+.nv-q[data-k="red"]    { --mk: var(--mk-red); }
+.nv-q:active { filter: brightness(.95); }
+
+/* A request wears its colour at the strength the book gives it, 42 per cent,
+   so the same passage does not change meaning between the two places. Without
+   a colour it gets no wash at all, again as in the book, and a rule in the
+   link navy instead, because a block of text has no underline to dash. */
+.nv-q.is-request {
+  border-left: 3px solid var(--navy-2);
+  padding-left: .55em;
+}
+.nv-q.is-request[data-k] {
+  background: color-mix(in srgb, var(--mk) 42%, transparent);
+  border-left-color: var(--mk);
+}
+.nv-q.is-request:not([data-k]) { background: none; }
+/* Where color-mix is missing the wash goes rather than arriving at full
+   strength, which is what marks.css does; here the left rule still carries
+   the colour, so the meaning is not lost with it. */
+@supports not (background: color-mix(in srgb, red 42%, transparent)) {
+  .nv-q.is-request[data-k] { background: none; }
+}
+
+/* ------------------------------------------- what he wrote underneath it
+   Indented and ruled in the note colour, so his own voice is visibly not the
+   book's. A note carries no label: the indent says whose it is. A request
+   does, because the label is the thing he asked for. */
+.nv-n, .nv-ask {
+  margin: -.05em 0 1.35em 1.3em;
+  padding-left: .9em;
+  border-left: 2px solid var(--mk-note);
+  color: var(--ink-2);
+  font-size: .98em;
+  line-height: 1.5;
+}
+.nv-n { font-style: italic; }
+.nv-ask b { color: var(--mk-note); font-weight: 700; font-style: normal; }
+
+/* --------------------------------------- questions about a whole chapter
+   A request on a whole chapter, or on a panel, has no passage to lift out. It
+   is set at the end of its chapter rather than dropped, in a dashed box so it
+   is plainly not a quotation from the book. */
+.nv-ask-h {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: .88em; font-weight: 700; letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  margin: 2em 0 .7em;
+}
+.nv-whole {
+  display: block; text-decoration: none;
+  color: var(--ink-2); line-height: 1.5;
+  margin: 0 0 .6em; padding: .55em .75em;
+  border: 1px dashed var(--rule-2); border-radius: 8px;
+  background: var(--bg-2);
+}
+.nv-whole b { color: var(--navy); font-weight: 700; }
+.nv-whole:active { background: var(--bg-3); }
+
+/* ------------------------------------------------------- the closing line
+   The one place that says where the editing lives, so a reader who wants to
+   delete something is never stuck in a view that cannot. */
+.nv-foot {
+  margin: 2.6em 0 0;
+  padding-top: 1em;
+  border-top: 1px solid var(--rule);
+  color: var(--ink-2);
+  font-size: .95em;
+  line-height: 1.5;
+}
+
+/* ------------------------------------------------------------------ print
+   A page of notes is the sort of thing somebody prints, so it prints. The
+   theme is forced back to the light palette whatever he is reading in,
+   because a dark wash printed on white paper is either a block of ink or,
+   with backgrounds off, near-white text on nothing. The extra html in the
+   selector is only there to outrank body.t-dark, which is equally specific
+   and would otherwise win or lose on file order. */
+@media print {
+  html body[data-page="marks"] {
+    --ink: #15181C; --ink-2: #3A424B; --ink-3: #55606B;
+    --bg: #FFFFFF; --bg-2: #FFFFFF; --bg-3: #FFFFFF;
+    --rule: #B9B9B9; --rule-2: #9A9A9A;
+    --navy: #0F3D5E; --navy-2: #1E5C86; --brass: #7A6030;
+    --mark: #FCE49A; --mark-2: #F7D571;
+    --mk-yellow: #FCE49A;
+    --mk-blue:   #B8CEF0;
+    --mk-green:  #A1DEC9;
+    --mk-red:    #DC8A88;
+    --mk-note:   #584A2E;
+    background: #FFFFFF;
+    color: var(--ink);
+  }
+  /* the controls are not part of the notes, and neither is the backup line */
+  body[data-page="marks"] .marks-tools,
+  body[data-page="marks"] .mk-state,
+  body[data-page="marks"] #mk-file,
+  body[data-page="marks"] .toast,
+  body[data-page="marks"] .nv-foot { display: none !important; }
+
+  body[data-page="marks"] .wrap { max-width: none; padding: 0; }
+  body[data-page="marks"] .marks-list { font-size: 1em; }
+
+  /* the wash is the point of the page, so it is printed rather than dropped */
+  .nv-q, .nv-whole {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    break-inside: avoid; page-break-inside: avoid;
+  }
+  /* and a heading does not end a sheet with nothing under it */
+  body[data-page="marks"] h2.parth, .nv-sec, .nv-ask-h {
+    break-after: avoid; page-break-after: avoid;
+  }
+  .nv-q, .nv-whole, .nv-n, .nv-ask { orphans: 2; widows: 2; }
+}
+/* ------------------------------------------------------- the vocabulary page
+   Added for build 16. 203 short entries, which is a different kind of page from
+   the glossary: the glossary is read, this one is looked things up in. So the
+   search box is the first thing on it and stays put, the letters are landmarks
+   for a thumb rather than decoration, and each entry is compact enough that a
+   phone shows several at once.
+
+   Every colour here is one of the tokens app.css already defines per theme, so
+   light, sepia and dark are handled by the same rules with nothing restated. */
+
+/* ------------------------------------------------------------- the search box
+   Sticky under the top bar. The bar is 56px on the smallest layout and the
+   glossary uses scroll-margin-top: 76px for the same reason, so 56px is the
+   offset that puts this immediately beneath it. */
+.wd-find {
+  position: sticky; top: 56px; z-index: 5;
+  margin: 0 0 1.4em; padding: 12px 0 10px;
+  background: var(--bg); border-bottom: 1px solid var(--rule);
+}
+.wd-row { display: flex; gap: 8px; align-items: center; }
+.wd-find input[type="search"] {
+  flex: 1 1 auto; min-width: 0;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 17px;               /* 17px or the iPad zooms the page on focus */
+  padding: 10px 12px; border-radius: 10px;
+  border: 1px solid var(--rule-2); background: var(--bg-2); color: var(--ink);
+  -webkit-appearance: none; appearance: none;
+}
+.wd-find input[type="search"]:focus {
+  outline: 2px solid var(--navy); outline-offset: 1px; border-color: var(--navy);
+}
+.wd-find input[type="search"]::placeholder { color: var(--ink-3); }
+#wd-clear {
+  flex: 0 0 auto;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px; font-weight: 600; color: var(--navy);
+  padding: 10px 14px; border-radius: 10px;
+  border: 1px solid var(--rule-2); background: var(--bg-2);
+}
+#wd-clear:active { background: var(--bg-3); }
+.wd-count {
+  margin: 8px 0 0; font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 13px; color: var(--ink-2);
+}
+
+/* ---------------------------------------------------------- letter landmarks */
+.wletter {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 13px; font-weight: 700; letter-spacing: .08em;
+  color: var(--brass); text-transform: uppercase;
+  margin: 1.8em 0 .8em; padding-bottom: 4px;
+  border-bottom: 1px solid var(--rule);
+}
+.wletter:first-of-type { margin-top: .4em; }
+
+/* ----------------------------------------------------------------- an entry */
+.witem {
+  margin: 0 0 1.25em; padding: 0 0 1.1em;
+  border-bottom: 1px solid var(--rule);
+  scroll-margin-top: 120px;      /* bar plus the sticky search box */
+}
+.witem:last-child { border-bottom: 0; }
+.witem h3 {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 1em; font-weight: 700; color: var(--navy);
+  margin: 0 0 .15em;
+}
+/* the other names it goes by, which is the reason this page exists */
+.w-also {
+  margin: 0 0 .45em;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: .8em; color: var(--ink-2); line-height: 1.5;
+}
+.w-also b { font-weight: 600; color: var(--ink-2); }
+.witem .w-d { margin: 0; font-size: .92em; }
+/* the trap. Set apart, because it is the part that stops a mistake rather than
+   the part that answers the question. */
+.witem .w-t {
+  margin: .55em 0 0; padding: 0 0 0 .85em;
+  border-left: 2px solid var(--brass);
+  font-size: .86em; color: var(--ink-2); line-height: 1.55;
+}
+
+/* ------------------------------------------------------------------- print */
+@media print {
+  .wd-find, .wd-count { display: none; }
+  .witem, .wletter { break-inside: avoid; }
+  .wletter { break-after: avoid; }
+}
+/* ------------------------------------------------- where the book is unsure
+
+   The book already says, in words, wherever it is not certain: no source
+   holds the fact, the book is reading a source that does not say it, a figure
+   is illustrative rather than published, or an argument rests on an
+   assumption. This makes those places visible instead of leaving them to be
+   noticed in the middle of a sentence.
+
+   The mark goes on the clause that carries the uncertainty. It never goes on
+   a quotation, on a tagged figure, or on a crew value, because each of those
+   already has its own convention and marking them twice would make the mark
+   mean nothing.
+
+   Colour is not the only signal. The dotted underline is what survives a page
+   printed in grey and a reader who does not separate teal from ink, so the
+   mark still reads without it. The colour is new to the book: navy is a link,
+   brass is a source tag, and the highlight yellow belongs to the reader. */
+
+:root { --uns: #1F6F63; }
+body.t-sepia { --uns: #2B6A5C; }
+body.t-dark { --uns: #6FC3B0; }
+
+.unsure {
+  color: var(--uns);
+  border-bottom: 1px dotted color-mix(in srgb, var(--uns) 70%, transparent);
+}
+
+/* A source tag or a glossary button inside a marked clause keeps its own
+   colour, so the two conventions do not fight. */
+.unsure .tg, .unsure .gl, .unsure .cv { color: inherit; }
+.unsure .tg-s, .unsure .tg-w { color: var(--brass); }
+
+/* In print the colour goes, so the line has to do the work on its own, and a
+   dotted line will not: the glossary button and the crew value are dotted too,
+   so three conventions would look alike. A double rule is the one shape
+   nothing else in the book uses. */
+@media print {
+  .unsure { color: inherit; border-bottom: 3px double #666; }
+}
+
+/* The legend on the About page shows the mark itself rather than describing
+   it, so a reader can match what is in front of them. */
+.unsure-key {
+  display: inline-block; color: var(--uns);
+  border-bottom: 1px dotted color-mix(in srgb, var(--uns) 70%, transparent);
+}
+/* ------------------------------------------------------------- build stamp
+   Supersedes bstamp.css, which is left as it was.
+
+   Added for build 26, after a chapter page opened from a folder on disk could
+   not be told apart from the same chapter on the published site. Until then
+   the cover was the only page that said which build it was, and a reader who
+   opens a chapter file directly, or who taps Contents out of a sample and
+   lands on the site, never passes the cover at all.
+
+   Build 27 gives the line a second job, which is the more important of the
+   two. Chapters 2 and 3 have been through the accuracy review and carry the
+   uncertainty mark wherever the book is not sure. The other seventeen have
+   not been read that way at all. Without this, a reader who meets teal in
+   chapter 2 and none in chapter 1 concludes that chapter 1 has nothing
+   uncertain in it, when the truth is that nobody has looked yet. The absence
+   of a mark is not evidence, and a book read by someone learning the subject
+   should not let it pass for evidence.
+
+   So an unreviewed chapter says so in amber. The colour is chosen to be the
+   one thing on the page that is neither ink, navy, brass nor teal, and the
+   words carry the meaning on their own for anyone who does not separate it. */
+
+:root { --unrev: #9A5B1E; }
+body.t-sepia { --unrev: #8A4F1A; }
+body.t-dark { --unrev: #D89A54; }
+
+.bstamp {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: .58em; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--ink-3); margin: -8px 0 16px;
+}
+
+.bstamp-un { color: var(--unrev); font-weight: 600; }
+
+/* A printed chapter has the same problem as a saved one, and in grey the
+   amber goes, so the weight is what carries it there. */
+@media print {
+  .bstamp { color: #666; }
+  .bstamp-un { color: #000; font-weight: 700; }
+}
